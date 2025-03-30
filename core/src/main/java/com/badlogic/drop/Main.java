@@ -30,7 +30,7 @@ Sprite bucketSprite;
         dropTexture = new Texture("drop.png");
 
         dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.mp3"));
-        //music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
         spriteBatch = new SpriteBatch();
         viewport = new FitViewport(8,5);
         bucketSprite = new Sprite(bucketTexture);
