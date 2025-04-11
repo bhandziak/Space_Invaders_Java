@@ -8,6 +8,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.ArrayList;
+
 public class EnemyWave {
     private Enemy enemyTemplate;
     private Array<Enemy> enemies;
@@ -24,7 +26,7 @@ public class EnemyWave {
     //odpowiada za strzelanie przeciwnikow
     private float shootTimer = 0f;
     private float shootInterval = 2f; //shooting delay
-
+    private int shootingEnemies=5; //max liczba przeciwnikow ktorzy moga strzelic podczas klatki
     public void setShootInterval(float interval) {
         this.shootInterval = interval;
     }
@@ -134,14 +136,19 @@ public class EnemyWave {
         shootTimer = 0f;
 
         // Losuj przeciwnika
-        int index = MathUtils.random(0, enemies.size - 1);
-        Enemy shooter = enemies.get(index);
+        int amountofEnemies = MathUtils.random(0, shootingEnemies); //
+        for(int i=0;i<amountofEnemies;i++) {
+            int index = MathUtils.random(0, enemies.size - 1);
+            for (Enemy enemy : enemies) {
+                Enemy shooter = enemies.get(index);
 
-        float x = shooter.sprite.getX() + shooter.sprite.getWidth() / 2f - 0.05f;
-        float y = shooter.sprite.getY();
+                float x = shooter.sprite.getX() + shooter.sprite.getWidth() / 2f - 0.05f;
+                float y = shooter.sprite.getY();
 
-        EnemyBullet bullet = new EnemyBullet(x, y);
-        enemyBullets.add(bullet);
+                EnemyBullet bullet = new EnemyBullet(x, y);
+                enemyBullets.add(bullet);
+            }
+        }
     }
     //usuwanie pociskow przeciwnikow
     public void updateEnemyBullets(float delta, Viewport viewport) {
