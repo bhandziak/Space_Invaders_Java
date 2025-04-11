@@ -15,7 +15,7 @@ public class EnemyWave {
 
     //odpowiada za ruch przeciwnikow
     private float moveTimer = 0f;
-    private float moveInterval = 2f; // co 2 sekundy
+    private float moveInterval = 1f; //move delay
     private float moveStep = 0.5f;
     private float moveDownStep;//ustawiane w 'EnemyWave'
     private boolean movingRight = true;

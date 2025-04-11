@@ -48,8 +48,8 @@ EnemyWave enemyWave;
         hitSound = Gdx.audio.newSound(Gdx.files.internal("playerDamage.wav"));//dziwiek otrzymania obrazen
 
         //enemy
-        enemyWhite = new Enemy(enemyWhiteTexture, 0, 0, 1f, 1f);
-        enemyGreen = new Enemy(enemyGreenTexture, 0, 0, 1f, 1f);
+        enemyWhite = new Enemy(enemyWhiteTexture, 0, 0, .7f, .7f);
+        enemyGreen = new Enemy(enemyGreenTexture, 0, 0, .7f, .7f);
 
         //wave
         enemyWave = new EnemyWave(enemyWhite);

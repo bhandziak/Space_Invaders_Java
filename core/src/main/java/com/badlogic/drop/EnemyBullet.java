@@ -14,7 +14,7 @@ public class EnemyBullet {
     public EnemyBullet(float x, float y) {
         texture = new Texture("drop.png");
         sprite = new Sprite(texture);
-        sprite.setSize(0.1f, 0.3f);
+        sprite.setSize(0.1f, 0.4f) ;
         sprite.setPosition(x, y);
     }
 

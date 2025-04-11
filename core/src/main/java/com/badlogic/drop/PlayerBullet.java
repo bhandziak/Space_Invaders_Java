@@ -24,7 +24,7 @@ public class PlayerBullet {
         //do zmiany
 
         bulletSprite = new Sprite(bulletTexture);
-        bulletSprite.setSize(0.1f, 0.3f);
+        bulletSprite.setSize(0.05f, 0.3f);
         bulletSprite.setPosition(x, y);
         bulletRectangle = new Rectangle(x, y, bulletSprite.getWidth(), bulletSprite.getHeight());
     }
