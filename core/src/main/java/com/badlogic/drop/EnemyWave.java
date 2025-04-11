@@ -17,7 +17,7 @@ public class EnemyWave {
     private float moveTimer = 0f;
     private float moveInterval = 2f; // co 2 sekundy
     private float moveStep = 0.5f;
-    private float moveDownStep = 0.5f;
+    private float moveDownStep;//ustawiane w 'EnemyWave'
     private boolean movingRight = true;
     ////////////
 
@@ -35,6 +35,7 @@ public class EnemyWave {
     public EnemyWave(Enemy enemyTemplate) {
         this.enemyTemplate = enemyTemplate;
         this.enemies = new Array<>();
+        this.moveDownStep = enemyTemplate.sprite.getHeight();//przesuniecie o wysokość przeciwnika
     }
 
     public void spawnWave(Viewport viewport, int amount, int row) {
