@@ -29,7 +29,7 @@ Player player;
         spriteBatch = new SpriteBatch();//batch
         backgroundTexture = new Texture("background_black.png");//tlo
         //rozmiar ekranu
-        viewport = new FitViewport(8, 5);
+        viewport = new FitViewport(16, 9);
         //player
         player = new Player();
     }
