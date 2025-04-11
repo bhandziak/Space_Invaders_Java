@@ -14,13 +14,24 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main implements ApplicationListener {
+//tlo
+Texture backgroundTexture;
+
 SpriteBatch spriteBatch;
 FitViewport viewport;
+
+//Player
+Player player;
 
     @Override
     public void create() {
         // Prepare your application here.
-
+        spriteBatch = new SpriteBatch();//batch
+        backgroundTexture = new Texture("background_black.png");//tlo
+        //rozmiar ekranu
+        viewport = new FitViewport(8, 5);
+        //player
+        player = new Player();
     }
 
     @Override
@@ -40,16 +51,19 @@ FitViewport viewport;
 
     }
     public void logic(){
-
+        float delta = Gdx.graphics.getDeltaTime();//czas gry
+        player.update(delta, viewport);//aktualizacja pozycji playera
 
     }
     public void draw(){
         ScreenUtils.clear(Color.BLACK);
         viewport.apply();
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
-        spriteBatch.begin();
-        //tutaj miejsce na rysowanie rzeczy
 
+        spriteBatch.begin();
+        spriteBatch.draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
+        //tutaj miejsce na rysowanie rzeczy
+        player.render(spriteBatch);//rysowanie gracza
 
         ////////////////////////
         spriteBatch.end();
@@ -68,5 +82,8 @@ FitViewport viewport;
     @Override
     public void dispose() {
         // Destroy application's resources here.
+        spriteBatch.dispose();
+        backgroundTexture.dispose();
+        player.dispose();
     }
 }
