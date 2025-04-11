@@ -14,27 +14,13 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main implements ApplicationListener {
-Texture backgroundTexture;
-Texture bucketTexture;
-Texture dropTexture;
-Sound dropSound;
-Music music;
 SpriteBatch spriteBatch;
 FitViewport viewport;
-Sprite bucketSprite;
+
     @Override
     public void create() {
         // Prepare your application here.
-        backgroundTexture = new Texture("background.png");
-        bucketTexture = new Texture("bucket.png");
-        dropTexture = new Texture("drop.png");
 
-        dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.mp3"));
-        music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
-        spriteBatch = new SpriteBatch();
-        viewport = new FitViewport(8,5);
-        bucketSprite = new Sprite(bucketTexture);
-        bucketSprite.setSize(1,1);
     }
 
     @Override
@@ -54,13 +40,7 @@ Sprite bucketSprite;
 
     }
     public void logic(){
-        float speed = 2.25f;
-        float delta = Gdx.graphics.getDeltaTime();
-        if(Gdx.input.isKeyPressed((Input.Keys.RIGHT))){
-            bucketSprite.translateX(speed * delta);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-            bucketSprite.translateX(-speed * delta);
-        }
+
 
     }
     public void draw(){
@@ -69,10 +49,9 @@ Sprite bucketSprite;
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
         spriteBatch.begin();
         //tutaj miejsce na rysowanie rzeczy
-        float worldWidth = viewport.getWorldWidth();
-        float worldHeight = viewport.getWorldHeight();
-        spriteBatch.draw(backgroundTexture,0,0,worldWidth,worldHeight);
-        bucketSprite.draw(spriteBatch);
+
+
+        ////////////////////////
         spriteBatch.end();
 
     }
