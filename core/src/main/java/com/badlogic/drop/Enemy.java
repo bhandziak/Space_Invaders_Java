@@ -9,12 +9,12 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 public class Enemy {
     private Texture enemyTexture;
-    protected Sound dropSound;
+    protected Sound killSound;
     private Rectangle bounds;
     Sprite sprite;
     Array<Enemy> enemies = new Array<>();
     public Enemy(Texture enemyTexture, float x, float y, float width,float height) {
-        dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.mp3"));
+        killSound = Gdx.audio.newSound(Gdx.files.internal("drop.mp3"));
         sprite = new Sprite(enemyTexture);
         sprite.setPosition(x, y);
         sprite.setSize(width,height);
@@ -31,6 +31,6 @@ public class Enemy {
     }
     public void dispose() {
         enemyTexture.dispose();
-        dropSound.dispose();
+        killSound.dispose();
     }
 }

@@ -16,7 +16,7 @@ public class PlayerBullet {
     private Sprite bulletSprite;
     private Rectangle bulletRectangle;
     private float bulletTimer;
-    private float speed = 5f;
+    private float speed = 4f;
     private boolean isAlive = true;
 
     public PlayerBullet(float x, float y) {
