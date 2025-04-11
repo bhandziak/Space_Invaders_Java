@@ -18,6 +18,8 @@ public class Player {
     private Sound bulletSound;
     private float speed = 4f;
     private Array<PlayerBullet> bullets;
+    private float shootDelay = 0.8f;//opoznienie strzalu
+    private float shootTimer = 0f;//licznik opoznienia strzalu
 
     public Player() {
         texture = new Texture("spaceship.png");
@@ -32,6 +34,7 @@ public class Player {
     }
 
     public void update(float delta, Viewport viewport) {
+        shootTimer += delta;//licznik czasu
         // Sterowanie
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             sprite.translateX(-speed * delta);
@@ -50,7 +53,9 @@ public class Player {
         bounds.setPosition(sprite.getX(), sprite.getY());
 
         // Strzał
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)&&shootTimer>=shootDelay) {
+            shootTimer = 0f; // reset licznika
+
             float bulletX = sprite.getX() + sprite.getWidth() / 2f-.05f;
             float bulletY = sprite.getY() + sprite.getHeight();
             bullets.add(new PlayerBullet(bulletX, bulletY));

@@ -135,19 +135,27 @@ public class EnemyWave {
 
         shootTimer = 0f;
 
-        // Losuj przeciwnika
-        int amountofEnemies = MathUtils.random(0, shootingEnemies); //
-        for(int i=0;i<amountofEnemies;i++) {
-            int index = MathUtils.random(0, enemies.size - 1);
-            for (Enemy enemy : enemies) {
-                Enemy shooter = enemies.get(index);
+        //liczba przeciwnikow ktorzy mogą strzelic
+        int amountOfShootingEnemies = MathUtils.random(1, shootingEnemies);
 
-                float x = shooter.sprite.getX() + shooter.sprite.getWidth() / 2f - 0.05f;
-                float y = shooter.sprite.getY();
+        //lista dostępnych indeksów przeciwników
+        Array<Integer> availableIndices = new Array<>();
+        for (int i = 0; i < enemies.size; i++) {
+            availableIndices.add(i);
+        }
 
-                EnemyBullet bullet = new EnemyBullet(x, y);
-                enemyBullets.add(bullet);
-            }
+        //mieszanie indexow
+        availableIndices.shuffle();
+
+        //wybranie pierwszych N przeciwników do strzału
+        for (int i = 0; i < Math.min(amountOfShootingEnemies, availableIndices.size); i++) {
+            Enemy shooter = enemies.get(availableIndices.get(i));
+
+            float x = shooter.sprite.getX() + shooter.sprite.getWidth() / 2f - 0.05f;
+            float y = shooter.sprite.getY();
+
+            EnemyBullet bullet = new EnemyBullet(x, y);
+            enemyBullets.add(bullet);
         }
     }
     //usuwanie pociskow przeciwnikow
