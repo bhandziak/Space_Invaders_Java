@@ -3,11 +3,14 @@ package com.badlogic.drop;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -26,7 +29,7 @@ public class Player {
         bulletSound = Gdx.audio.newSound(Gdx.files.internal("laserShoot.wav"));
         sprite = new Sprite(texture);
         sprite.setSize(.5f, .5f);
-        sprite.setPosition(4 - 0.5f, .1f); // centrowanie na środku
+        sprite.setPosition(4 - 0.5f, .8f); // centrowanie na środku
 
         bullets = new Array<>();
         bounds = new Rectangle(sprite.getX(), sprite.getY(),
@@ -78,7 +81,28 @@ public class Player {
             bullet.render(batch);
         }
     }
+    public void renderShootCooldownBar(SpriteBatch batch){
+        float barWidth = 200f;    // Szerokość paska
+        float barHeight = 20f;    // Wysokość paska
+        float barX = 20f;         // Pozycja X paska (lewy margines)
+        float barY = 20f;         // Pozycja Y paska (dolny margines)
+        ShapeRenderer shapeRenderer = new ShapeRenderer();
 
+        //oblicza procent wypełnienia (ograniczony do zakresu 0-1)
+        float progress = Math.min(shootTimer / shootDelay, 1f);
+
+        //oblicza szerokość wypełnienia (ograniczoną do barWidth)
+        float fillWidth = Math.min(progress * barWidth, barWidth);
+
+        // Tło paska (szary prostokąt)
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.GRAY);
+        shapeRenderer.rect(barX, barY, barWidth, barHeight);
+
+        shapeRenderer.setColor(Color.GREEN);
+        shapeRenderer.rect(barX, barY, fillWidth, barHeight);
+        shapeRenderer.end();
+    }
     public Rectangle getBounds() {
         return bounds;
     }
