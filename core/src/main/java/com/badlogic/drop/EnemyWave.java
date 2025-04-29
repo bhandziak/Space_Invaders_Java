@@ -159,7 +159,7 @@ public class EnemyWave {
             float x = shooter.sprite.getX() + shooter.sprite.getWidth() / 2f - 0.05f;
             float y = shooter.sprite.getY();
 
-            EnemyBullet bullet = new EnemyBullet(x, y,shooter.getEnemyBulletDamage());//pocisk dostaje ilosc obrazen po podanym Enemy wybranym z listy w wave
+            EnemyBullet bullet = new EnemyBullet(x, y,shooter);//pocisk dostaje ilosc obrazen po podanym Enemy wybranym z listy w wave
             enemyBullets.add(bullet);
         }
     }
@@ -185,8 +185,8 @@ public class EnemyWave {
             EnemyBullet bullet = enemyBullets.get(i);
             // trafienie gracza
             if (bullet.getBounds().overlaps(playerBounds)) {
-                player.PlayerTakeHit(enemyBullets.get(i).getEnemyBulletDamage());
-                System.out.println("Gracz otrzymal "+enemyBullets.get(i).getEnemyBulletDamage()+" obrazen, teraz posiada "+player.getPlayerHP()+" HP");//debug note
+                player.PlayerTakeHit(enemyBullets.get(i).getEnemyByBullet().getEnemyBulletDamage());
+                System.out.println("Gracz otrzymal "+enemyBullets.get(i).getEnemyByBullet().getEnemyBulletDamage()+" obrazen, teraz posiada "+player.getPlayerHP()+" HP");//debug note
                 enemyBullets.removeIndex(i);
                 hitSound.play();
             }

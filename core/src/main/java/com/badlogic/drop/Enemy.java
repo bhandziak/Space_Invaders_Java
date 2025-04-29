@@ -13,7 +13,7 @@ public class Enemy {
     private Rectangle bounds;
     protected float EnemyHP;//zycie przeciwnika
     protected float EnemyBulletDamage;//damage przeciwnika
-    protected int enemyAlive=1;
+    protected int enemyAlive=1;//poczatkowy stan przeciwnika
     Sprite sprite;
     Array<Enemy> enemies = new Array<>();
     public Enemy(Texture enemyTexture, float x, float y, float width,float height,float enemyHP,float enemyBulletDamage) {

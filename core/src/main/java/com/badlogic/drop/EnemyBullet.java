@@ -10,13 +10,13 @@ public class EnemyBullet {
     private Texture texture;
     private Sprite sprite;
     private float speed = 3f;
-    protected float EnemyBulletDamage;//damage przeciwnika
-    public EnemyBullet(float x, float y,float enemyBulletDamage) {
+    private Enemy enemy;
+    public EnemyBullet(float x, float y,Enemy enemyTemplate) {
         texture = new Texture("drop.png");
         sprite = new Sprite(texture);
         sprite.setSize(0.1f, 0.4f);
         sprite.setPosition(x, y);
-        EnemyBulletDamage = enemyBulletDamage;
+        enemy = enemyTemplate;
     }
 
     public void update(float delta) {
@@ -35,7 +35,7 @@ public class EnemyBullet {
         return sprite.getBoundingRectangle();
     }
 
-    public float getEnemyBulletDamage() {
-        return EnemyBulletDamage;
+    public Enemy getEnemyByBullet(){
+        return enemy;
     }
 }

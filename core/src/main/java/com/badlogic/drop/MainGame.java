@@ -116,7 +116,7 @@ public class MainGame implements Screen {
             //player.activeCheatCode();
         }
         if(player.isPlayerAlive()==0){
-            //tutaj wywolanie UI z oknem przegranej
+            //TODO tutaj wywolanie UI z oknem przegranej
         }
 
 

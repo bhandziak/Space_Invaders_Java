@@ -66,7 +66,7 @@ public class Player {
 
             float bulletX = sprite.getX() + sprite.getWidth() / 2f-.05f;
             float bulletY = sprite.getY() + sprite.getHeight();
-            bullets.add(new PlayerBullet(bulletX, bulletY, getPlayerDamage()));
+            bullets.add(new PlayerBullet(bulletX, bulletY,PlayerDamage));
             bulletSound.play();
         }
 
