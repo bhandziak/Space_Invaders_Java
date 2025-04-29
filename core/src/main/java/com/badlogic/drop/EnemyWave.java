@@ -31,6 +31,8 @@ public class EnemyWave {
     public void setShootInterval(float interval) {
         this.shootInterval = interval;
     }
+    //tekstury dla paska HP wrogow
+    Texture barFillTexture = new Texture("progressBar_green.png");
 
     public Array<EnemyBullet> enemyBullets = new Array<>();
     ////////////////////////
@@ -196,7 +198,7 @@ public class EnemyWave {
     private void clearLeftEnemiesBullets(){
         enemyBullets.clear();
     }
-    //TODO;
+
     //metoda do tworzenia nowej fali po skonczeniu poprzedniej
     public void generateNewWave(Array<Enemy>  enemyTypes, FitViewport viewport,Player player){
         int enemyRows = MathUtils.random(1, 5);
@@ -221,6 +223,20 @@ public class EnemyWave {
             enemy.sprite.draw(batch);
         }
     }
+
+    public void renderEnemyHPBar(SpriteBatch batch){
+        for (Enemy enemy : enemies) {
+            float progress = Math.max(0, Math.min(enemy.getEnemyHP() / enemy.getEnemyMaxHP(), 1f));
+            float barWidth = 0.25f;//szerokosc
+            float barHeight = 0.02f;//wysokosc
+            float centerX = enemy.getEnemySprite().getX()+ enemy.getEnemySprite().getWidth() / 2f;//srodek sprite'a tekstury przeciwnika
+            float barX = centerX - barWidth /2f;//polozenie x
+            float barY = enemy.getEnemySprite().getY();//polozenie y
+            float fillWidth = Math.min(progress * barWidth, barWidth);
+            batch.draw(barFillTexture, barX, barY, fillWidth, barHeight);
+        }
+    }
+
 
     public void update(float delta, Viewport viewport, Array<PlayerBullet> bullets) {
         for (int i = enemies.size - 1; i >= 0; i--) {

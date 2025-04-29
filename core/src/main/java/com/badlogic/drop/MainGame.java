@@ -74,7 +74,7 @@ public class MainGame implements Screen {
         enemyWave.generateNewWave(EnemyTypes, viewport,player);
 
         //test only
-        player.activeCheatCode();
+        //player.activeCheatCode();
     }
 
     @Override
@@ -133,7 +133,7 @@ public class MainGame implements Screen {
         enemyWave.render(spriteBatch);
         enemyWave.renderEnemyBullets(spriteBatch);
         player.renderShootCooldownBar(spriteBatch);//rysowanie paska shootCooldown
-
+        enemyWave.renderEnemyHPBar(spriteBatch);//rysowanie paskow hp przeciwnikow
 
         ////////////////////////
         spriteBatch.end();
