@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
@@ -191,6 +192,26 @@ public class EnemyWave {
             }
         }
     }
+    //czyszczenie pociskow ktore zostaly z poprzedniej fali
+    private void clearLeftEnemiesBullets(){
+        enemyBullets.clear();
+    }
+    //TODO;
+    //metoda do tworzenia nowej fali po skonczeniu poprzedniej
+    public void generateNewWave(Array<Enemy>  enemyTypes, FitViewport viewport,Player player){
+        int enemyRows = MathUtils.random(1, 5);
+        for(int i=0;i<enemyRows;i++){
+            int getEnemyType = MathUtils.random(0,enemyTypes.size-1);
+            int enemiesInRow = MathUtils.random(1,12);//12-max rozmiar wiersza wrogow
+            addRow(viewport, enemiesInRow, i, enemyTypes.get(getEnemyType));
+        }
+        clearLeftEnemiesBullets();
+        player.clearLeftPlayerBullets();
+    }
+    //metoda sprawdzania czy zabito wszystkich przeciwnikow
+    public int isAnyEnemyLeftOnField(){
+        return enemies.size;
+    }
     public Array<Enemy> getEnemies() {
         return enemies;
     }
@@ -215,6 +236,7 @@ public class EnemyWave {
                 if (bullet.collides(bounds)) {
                     enemies.get(i).EnemyTakeHit(bullet.getBulletDamage());
                     System.out.println("Przeciwnik otrzymal "+bullet.getBulletDamage()+" obrazen, teraz posiada "+enemies.get(i).getEnemyHP()+" HP");//debug note
+                    //TODO tutaj dodac dzwiek otrzymania obrazen przez przeciwnika
                     if(enemies.get(i).isEnemyAlive()==0){
                         enemies.removeIndex(i);
                         enemy.killSound.play();

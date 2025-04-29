@@ -26,13 +26,14 @@ public class Player {
     int playerAlive=1;  //zmienna do sprawdzenia czy player zyje
     private float shootDelay = 0.8f;//opoznienie strzalu
     private float shootTimer = 0f;//licznik opoznienia strzalu
-
+    private final float playerStartXPosition = 8-0.5f;
+    private final float playerStartYPosition = 0.8f;
     public Player() {
         texture = new Texture("spaceship.png");
         bulletSound = Gdx.audio.newSound(Gdx.files.internal("laserShoot.wav"));
         sprite = new Sprite(texture);
         sprite.setSize(.5f, .5f);
-        sprite.setPosition(4 - 0.5f, .8f); // centrowanie na środku
+        sprite.setPosition(playerStartXPosition, playerStartYPosition); // centrowanie na środku
         PlayerHP = 20f;//poczatkowe HP gracza
         PlayerDamage = 5f;//poczatkowe damage gracza
         bullets = new Array<>();
@@ -126,6 +127,10 @@ public class Player {
             playerAlive=0;
         }
     }
+
+    public void clearLeftPlayerBullets(){
+        bullets.clear();
+    }
     //zwraca 0 gdy hp gracza <= 0
     public int isPlayerAlive(){
         return playerAlive;
@@ -136,4 +141,16 @@ public class Player {
     public float getPlayerDamage(){
         return PlayerDamage;
     }
+    public void resetPlayerPosition(){
+        sprite.setPosition(playerStartXPosition, playerStartYPosition); // centrowanie na środku
+    }
+    public void resetPlayerHP(){
+        PlayerHP = 20f;//poczatkowe HP gracza
+    }
+    public void activeCheatCode(){
+        PlayerHP = 1000;
+        PlayerDamage = 1000;
+        shootDelay = 0;
+    }
+
 }

@@ -9,6 +9,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
@@ -33,6 +34,9 @@ public class MainGame implements Screen {
     //Wave - fala przeciwnikow
     EnemyWave enemyWave;
 
+    //tablica na typy przeciwnikow
+    Array<Enemy> EnemyTypes = new Array<>();
+
     public MainGame(Main game) {
         this.game = game;
         // wszystko z metody create()
@@ -48,16 +52,28 @@ public class MainGame implements Screen {
         player = new Player();
         hitSound = Gdx.audio.newSound(Gdx.files.internal("playerDamage.wav"));//dziwiek otrzymania obrazen
 
-        //enemy
+        //enemy - tutaj mozna dodac nowe typy przeciwnikow
         enemyWhite = new Enemy(enemyWhiteTexture, 0, 0, .7f, .7f,5f,2f);
         enemyGreen = new Enemy(enemyGreenTexture, 0, 0, .7f, .7f,10f,3f);
 
-        //wave
-        enemyWave = new EnemyWave(enemyWhite);
-        enemyWave.spawnWave(viewport, 12, 0);
-        enemyWave.spawnWave(viewport, 12, 1);
+        //wave - reczne tworzenie fali - w razie potrzeby
+        //enemyWave = new EnemyWave(enemyWhite);
         //dodanie rzedu z nowym typem przeciwnika
-        enemyWave.addRow(viewport, 10, 2, enemyGreen);
+        //enemyWave.addRow(viewport, 10, 0, enemyGreen);
+        //enemyWave.addRow(viewport, 10, 1, enemyWhite);
+        //enemyWave.addRow(viewport, 10, 2, enemyGreen);
+        //enemyWave.spawnWave(viewport, 12, 0);
+        //enemyWave.spawnWave(viewport, 12, 1);
+
+        //zapisanie typow przeciwnikow do tablicy (potrzebne do tworzenia nowych fal przeciwnikow)
+        EnemyTypes.add(enemyWhite,enemyGreen);
+
+        //generowanie losowej pierwszej fali
+        enemyWave = new EnemyWave(enemyWhite);
+        enemyWave.generateNewWave(EnemyTypes, viewport,player);
+
+        //test only
+        //player.activeCheatCode();
     }
 
     @Override
@@ -92,6 +108,13 @@ public class MainGame implements Screen {
         enemyWave.tryShootRandomEnemy(delta);//strzelanie przeciwnikow
         enemyWave.updateEnemyBullets(delta, viewport);//update pociskow przeciwnikow
         enemyWave.checkCollisionWithPlayer(player.getBounds(), hitSound,player);//sprawdzenie kolizji pociskow przeciwnikow z graczem - aktualizacja hp gdy kolizja
+        if(enemyWave.isAnyEnemyLeftOnField()==0){//sprawdzenie czy jest jeszcze jakis przeciwnik na ekranie
+            enemyWave.generateNewWave(EnemyTypes, viewport,player);
+            player.resetPlayerPosition();
+            player.resetPlayerHP();//wart. pocz. HP
+            //test only
+            //player.activeCheatCode();
+        }
         if(player.isPlayerAlive()==0){
             //tutaj wywolanie UI z oknem przegranej
         }
