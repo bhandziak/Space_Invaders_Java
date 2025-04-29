@@ -22,14 +22,16 @@ public class Player {
     private float speed = 4f;
     private Array<PlayerBullet> bullets;
     float PlayerHP;
+    float PlayerMaxHP;
     float PlayerDamage;
     int playerAlive=1;  //zmienna do sprawdzenia czy player zyje
     private float shootDelay = 0.8f;//opoznienie strzalu
     private float shootTimer = 0f;//licznik opoznienia strzalu
     private final float playerStartXPosition = 8-0.5f;
     private final float playerStartYPosition = 0.8f;
-    //tekstury dla paska shootDelay
-    Texture barFillTexture = new Texture("progressBar_green.png");
+    //tekstury
+    Texture barFillTexture = new Texture("progressBar_green.png");// textura dla paska shootDelay
+    Texture HPBarTexture = new Texture("progressBar_white.png");// textura dla HP gracza
 
     public Player() {
         texture = new Texture("spaceship.png");
@@ -38,6 +40,7 @@ public class Player {
         sprite.setSize(.5f, .5f);
         sprite.setPosition(playerStartXPosition, playerStartYPosition); // centrowanie na środku
         PlayerHP = 20f;//poczatkowe HP gracza
+        PlayerMaxHP = PlayerHP;//max HP gracza
         PlayerDamage = 5f;//poczatkowe damage gracza
         bullets = new Array<>();
         bounds = new Rectangle(sprite.getX(), sprite.getY(),
@@ -100,6 +103,15 @@ public class Player {
 
         // Rysowanie paska
         batch.draw(barFillTexture, barX, barY, fillWidth, barHeight);
+    }
+    public void renderPlayerHPBar(SpriteBatch batch){
+        float barWidth = 2f;//szerokosc
+        float barHeight = 0.15f;//wysokosc
+        float barX = 13.5f;//polozenie x
+        float barY = 0.3f;//polozenie y
+        float progress = Math.max(0, Math.min(PlayerHP / PlayerMaxHP, 1f));
+        float fillWidth = Math.min(progress * barWidth, barWidth);
+        batch.draw(HPBarTexture, barX, barY, fillWidth, barHeight);
     }
     public Rectangle getBounds() {
         return bounds;

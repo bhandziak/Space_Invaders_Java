@@ -133,6 +133,7 @@ public class MainGame implements Screen {
         enemyWave.render(spriteBatch);
         enemyWave.renderEnemyBullets(spriteBatch);
         player.renderShootCooldownBar(spriteBatch);//rysowanie paska shootCooldown
+        player.renderPlayerHPBar(spriteBatch);//rysowanie paska hp gracza
         enemyWave.renderEnemyHPBar(spriteBatch);//rysowanie paskow hp przeciwnikow
 
         ////////////////////////
