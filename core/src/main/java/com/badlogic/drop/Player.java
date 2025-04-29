@@ -28,6 +28,9 @@ public class Player {
     private float shootTimer = 0f;//licznik opoznienia strzalu
     private final float playerStartXPosition = 8-0.5f;
     private final float playerStartYPosition = 0.8f;
+    //tekstury dla paska shootDelay
+    Texture barFillTexture = new Texture("progressBar_green.png");
+
     public Player() {
         texture = new Texture("spaceship.png");
         bulletSound = Gdx.audio.newSound(Gdx.files.internal("laserShoot.wav"));
@@ -87,26 +90,16 @@ public class Player {
         }
     }
     public void renderShootCooldownBar(SpriteBatch batch){
-        float barWidth = 200f;    // Szerokość paska
-        float barHeight = 20f;    // Wysokość paska
-        float barX = 20f;         // Pozycja X paska (lewy margines)
-        float barY = 20f;         // Pozycja Y paska (dolny margines)
-        ShapeRenderer shapeRenderer = new ShapeRenderer();
+        float barWidth = 2f;//szerokosc
+        float barHeight = 0.15f;//wysokosc
+        float barX = 0.5f;//polozenie x
+        float barY = 0.3f;//polozenie y
 
-        //oblicza procent wypełnienia (ograniczony do zakresu 0-1)
         float progress = Math.min(shootTimer / shootDelay, 1f);
-
-        //oblicza szerokość wypełnienia (ograniczoną do barWidth)
         float fillWidth = Math.min(progress * barWidth, barWidth);
 
-        // Tło paska (szary prostokąt)
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.GRAY);
-        shapeRenderer.rect(barX, barY, barWidth, barHeight);
-
-        shapeRenderer.setColor(Color.GREEN);
-        shapeRenderer.rect(barX, barY, fillWidth, barHeight);
-        shapeRenderer.end();
+        // Rysowanie paska
+        batch.draw(barFillTexture, barX, barY, fillWidth, barHeight);
     }
     public Rectangle getBounds() {
         return bounds;

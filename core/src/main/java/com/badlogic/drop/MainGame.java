@@ -45,6 +45,7 @@ public class MainGame implements Screen {
         //rozmiar ekranu
         viewport = new FitViewport(16, 9);
 
+
         backgroundTexture = new Texture("background_black.png");//tlo
         enemyWhiteTexture = new Texture("enemy_white.png");//tekstura enemy-white
         enemyGreenTexture = new Texture("enemy_green.png");//tekstura enemy-green
@@ -73,7 +74,7 @@ public class MainGame implements Screen {
         enemyWave.generateNewWave(EnemyTypes, viewport,player);
 
         //test only
-        //player.activeCheatCode();
+        player.activeCheatCode();
     }
 
     @Override
@@ -84,7 +85,6 @@ public class MainGame implements Screen {
 
     @Override
     public void show() {
-
     }
 
     @Override
@@ -102,6 +102,7 @@ public class MainGame implements Screen {
         float delta = Gdx.graphics.getDeltaTime();//czas gry
         player.update(delta, viewport);//aktualizacja pozycji playera
 
+
         //wave
         enemyWave.update(delta, viewport, player.getBulletsArray());//update pociskow (usuwanie itp)
         enemyWave.moveEnemies(delta, viewport);//ruch przeciwnikow
@@ -118,8 +119,6 @@ public class MainGame implements Screen {
         if(player.isPlayerAlive()==0){
             //TODO tutaj wywolanie UI z oknem przegranej
         }
-
-
     }
     public void draw(){
         ScreenUtils.clear(Color.BLACK);
@@ -133,7 +132,9 @@ public class MainGame implements Screen {
         enemyWhite.render(spriteBatch);
         enemyWave.render(spriteBatch);
         enemyWave.renderEnemyBullets(spriteBatch);
-        //player.renderShootCooldownBar(spriteBatch); //to replace with UI implementation
+        player.renderShootCooldownBar(spriteBatch);//rysowanie paska shootCooldown
+
+
         ////////////////////////
         spriteBatch.end();
 
