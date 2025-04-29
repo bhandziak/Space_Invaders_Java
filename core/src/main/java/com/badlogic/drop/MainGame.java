@@ -54,8 +54,8 @@ public class MainGame implements Screen {
         hitSound = Gdx.audio.newSound(Gdx.files.internal("playerDamage.wav"));//dziwiek otrzymania obrazen
 
         //enemy - tutaj mozna dodac nowe typy przeciwnikow
-        enemyWhite = new Enemy(enemyWhiteTexture, 0, 0, .7f, .7f,5f,2f);
-        enemyGreen = new Enemy(enemyGreenTexture, 0, 0, .7f, .7f,10f,3f);
+        enemyWhite = new Enemy(enemyWhiteTexture, 0, 0, .7f, .7f,5f,2f,2.5f);
+        enemyGreen = new Enemy(enemyGreenTexture, 0, 0, .7f, .7f,10f,3f,3.5f);
 
         //wave - reczne tworzenie fali - w razie potrzeby
         //enemyWave = new EnemyWave(enemyWhite);

@@ -54,6 +54,7 @@ public class EnemyWave {
         Texture texture = enemyTemplate.sprite.getTexture();
         float enemyHP = enemyTemplate.EnemyHP;
         float enemyBulletDamage = enemyTemplate.EnemyBulletDamage;
+        float bulletSpeed = enemyTemplate.EnemyBulletSpeed;
 
         // Wysokość ekranu, aby ustawić przeciwników na odpowiedniej wysokości
         float worldHeight = viewport.getWorldHeight();
@@ -67,7 +68,7 @@ public class EnemyWave {
 
         for (int i = 0; i < amount; i++) {
             float x = startX + i * (width + spacing);
-            Enemy newEnemy = new Enemy(texture, x, y, width, height,enemyHP,enemyBulletDamage);
+            Enemy newEnemy = new Enemy(texture, x, y, width, height,enemyHP,enemyBulletDamage,bulletSpeed);
             enemies.add(newEnemy);
         }
     }
@@ -82,6 +83,7 @@ public class EnemyWave {
         Texture texture = enemyTemplate.sprite.getTexture();
         float enemyHP = enemyTemplate.EnemyHP;
         float enemyBulletDamage = enemyTemplate.EnemyBulletDamage;
+        float bulletSpeed = enemyTemplate.EnemyBulletSpeed;
 
         // Wysokość ekranu, aby ustawić przeciwników na odpowiedniej wysokości
         float worldHeight = viewport.getWorldHeight();
@@ -96,7 +98,7 @@ public class EnemyWave {
 
         for (int i = 0; i < amount; i++) {
             float x = startX + i * (width + spacing);
-            Enemy enemy = new Enemy(texture, x, y, width, height,enemyHP,enemyBulletDamage);
+            Enemy enemy = new Enemy(texture, x, y, width, height,enemyHP,enemyBulletDamage,bulletSpeed);
             enemies.add(enemy);
         }
     }

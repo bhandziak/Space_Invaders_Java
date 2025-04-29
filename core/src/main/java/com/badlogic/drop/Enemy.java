@@ -15,10 +15,11 @@ public class Enemy {
     protected float EnemyMAXHP = EnemyHP;
     protected float EnemyBulletDamage;//damage przeciwnika
     protected int enemyAlive=1;//poczatkowy stan przeciwnika
+    protected float EnemyBulletSpeed;//poczatkowy stan przeciwnika
     Sprite sprite;
     Array<Enemy> enemies = new Array<>();
 
-    public Enemy(Texture enemyTexture, float x, float y, float width,float height,float enemyHP,float enemyBulletDamage) {
+    public Enemy(Texture enemyTexture, float x, float y, float width,float height,float enemyHP,float enemyBulletDamage,float bulletSpeed) {
         killSound = Gdx.audio.newSound(Gdx.files.internal("drop.mp3"));
         sprite = new Sprite(enemyTexture);
         sprite.setPosition(x, y);
@@ -27,6 +28,7 @@ public class Enemy {
         EnemyHP = enemyHP;//zycie przeciwnika
         EnemyMAXHP = EnemyHP;
         EnemyBulletDamage = enemyBulletDamage;
+        EnemyBulletSpeed = bulletSpeed;
     }
 
     public void render(SpriteBatch batch) {
