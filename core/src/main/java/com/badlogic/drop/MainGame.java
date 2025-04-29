@@ -27,8 +27,8 @@ public class MainGame implements Screen {
     //Enemy
     Texture enemyWhiteTexture;
     Texture enemyGreenTexture;
-    Enemy enemyWhite;
-    Enemy enemyGreen;
+    Enemy enemyWhite;//5hp   2dmg
+    Enemy enemyGreen;//10hp  3dmg
 
     //Wave - fala przeciwnikow
     EnemyWave enemyWave;
@@ -49,8 +49,8 @@ public class MainGame implements Screen {
         hitSound = Gdx.audio.newSound(Gdx.files.internal("playerDamage.wav"));//dziwiek otrzymania obrazen
 
         //enemy
-        enemyWhite = new Enemy(enemyWhiteTexture, 0, 0, .7f, .7f);
-        enemyGreen = new Enemy(enemyGreenTexture, 0, 0, .7f, .7f);
+        enemyWhite = new Enemy(enemyWhiteTexture, 0, 0, .7f, .7f,5f,2f);
+        enemyGreen = new Enemy(enemyGreenTexture, 0, 0, .7f, .7f,10f,3f);
 
         //wave
         enemyWave = new EnemyWave(enemyWhite);
@@ -91,11 +91,9 @@ public class MainGame implements Screen {
         enemyWave.moveEnemies(delta, viewport);//ruch przeciwnikow
         enemyWave.tryShootRandomEnemy(delta);//strzelanie przeciwnikow
         enemyWave.updateEnemyBullets(delta, viewport);//update pociskow przeciwnikow
-        if (enemyWave.checkCollisionWithPlayer(player.getBounds(), hitSound)) {
-            // np. odejmij życie, zakończ grę,
-            //do rozbudowy
-
-            System.out.println("Gracz trafiony!");
+        enemyWave.checkCollisionWithPlayer(player.getBounds(), hitSound,player);//sprawdzenie kolizji pociskow przeciwnikow z graczem - aktualizacja hp gdy kolizja
+        if(player.isPlayerAlive()==0){
+            //tutaj wywolanie UI z oknem przegranej
         }
 
 

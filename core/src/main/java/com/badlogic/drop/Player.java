@@ -21,6 +21,9 @@ public class Player {
     private Sound bulletSound;
     private float speed = 4f;
     private Array<PlayerBullet> bullets;
+    float PlayerHP;
+    float PlayerDamage;
+    int playerAlive=1;  //zmienna do sprawdzenia czy player zyje
     private float shootDelay = 0.8f;//opoznienie strzalu
     private float shootTimer = 0f;//licznik opoznienia strzalu
 
@@ -30,7 +33,8 @@ public class Player {
         sprite = new Sprite(texture);
         sprite.setSize(.5f, .5f);
         sprite.setPosition(4 - 0.5f, .8f); // centrowanie na środku
-
+        PlayerHP = 20f;//poczatkowe HP gracza
+        PlayerDamage = 5f;//poczatkowe damage gracza
         bullets = new Array<>();
         bounds = new Rectangle(sprite.getX(), sprite.getY(),
             sprite.getWidth(), sprite.getHeight());
@@ -61,7 +65,7 @@ public class Player {
 
             float bulletX = sprite.getX() + sprite.getWidth() / 2f-.05f;
             float bulletY = sprite.getY() + sprite.getHeight();
-            bullets.add(new PlayerBullet(bulletX, bulletY));
+            bullets.add(new PlayerBullet(bulletX, bulletY, getPlayerDamage()));
             bulletSound.play();
         }
 
@@ -115,5 +119,21 @@ public class Player {
     }
     public Array<PlayerBullet> getBulletsArray(){
         return bullets;
+    }
+    public void PlayerTakeHit(float damage){
+        PlayerHP -= damage;
+        if(PlayerHP <= 0){
+            playerAlive=0;
+        }
+    }
+    //zwraca 0 gdy hp gracza <= 0
+    public int isPlayerAlive(){
+        return playerAlive;
+    }
+    public float getPlayerHP(){
+        return PlayerHP;
+    }
+    public float getPlayerDamage(){
+        return PlayerDamage;
     }
 }

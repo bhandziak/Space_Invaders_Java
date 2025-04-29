@@ -49,6 +49,8 @@ public class EnemyWave {
         float width = enemyTemplate.sprite.getWidth();
         float height = enemyTemplate.sprite.getHeight();
         Texture texture = enemyTemplate.sprite.getTexture();
+        float enemyHP = enemyTemplate.EnemyHP;
+        float enemyBulletDamage = enemyTemplate.EnemyBulletDamage;
 
         // Wysokość ekranu, aby ustawić przeciwników na odpowiedniej wysokości
         float worldHeight = viewport.getWorldHeight();
@@ -62,7 +64,7 @@ public class EnemyWave {
 
         for (int i = 0; i < amount; i++) {
             float x = startX + i * (width + spacing);
-            Enemy newEnemy = new Enemy(texture, x, y, width, height);
+            Enemy newEnemy = new Enemy(texture, x, y, width, height,enemyHP,enemyBulletDamage);
             enemies.add(newEnemy);
         }
     }
@@ -75,6 +77,8 @@ public class EnemyWave {
         float width = enemyTemplate.sprite.getWidth();
         float height = enemyTemplate.sprite.getHeight();
         Texture texture = enemyTemplate.sprite.getTexture();
+        float enemyHP = enemyTemplate.EnemyHP;
+        float enemyBulletDamage = enemyTemplate.EnemyBulletDamage;
 
         // Wysokość ekranu, aby ustawić przeciwników na odpowiedniej wysokości
         float worldHeight = viewport.getWorldHeight();
@@ -89,7 +93,7 @@ public class EnemyWave {
 
         for (int i = 0; i < amount; i++) {
             float x = startX + i * (width + spacing);
-            Enemy enemy = new Enemy(texture, x, y, width, height);
+            Enemy enemy = new Enemy(texture, x, y, width, height,enemyHP,enemyBulletDamage);
             enemies.add(enemy);
         }
     }
@@ -154,7 +158,7 @@ public class EnemyWave {
             float x = shooter.sprite.getX() + shooter.sprite.getWidth() / 2f - 0.05f;
             float y = shooter.sprite.getY();
 
-            EnemyBullet bullet = new EnemyBullet(x, y);
+            EnemyBullet bullet = new EnemyBullet(x, y,shooter.getEnemyBulletDamage());//pocisk dostaje ilosc obrazen po podanym Enemy wybranym z listy w wave
             enemyBullets.add(bullet);
         }
     }
@@ -175,16 +179,17 @@ public class EnemyWave {
         }
     }
     //wykrycie kolizji z graczem
-    public boolean checkCollisionWithPlayer(Rectangle playerBounds, Sound hitSound) {
+    public void checkCollisionWithPlayer(Rectangle playerBounds, Sound hitSound, Player player) {
         for (int i = enemyBullets.size - 1; i >= 0; i--) {
             EnemyBullet bullet = enemyBullets.get(i);
+            // trafienie gracza
             if (bullet.getBounds().overlaps(playerBounds)) {
+                player.PlayerTakeHit(enemyBullets.get(i).getEnemyBulletDamage());
+                System.out.println("Gracz otrzymal "+enemyBullets.get(i).getEnemyBulletDamage()+" obrazen, teraz posiada "+player.getPlayerHP()+" HP");//debug note
                 enemyBullets.removeIndex(i);
                 hitSound.play();
-                return true; // trafienie gracza
             }
         }
-        return false;
     }
     public Array<Enemy> getEnemies() {
         return enemies;
@@ -208,9 +213,13 @@ public class EnemyWave {
 
             for (PlayerBullet bullet : bullets) {
                 if (bullet.collides(bounds)) {
-                    enemies.removeIndex(i);
+                    enemies.get(i).EnemyTakeHit(bullet.getBulletDamage());
+                    System.out.println("Przeciwnik otrzymal "+bullet.getBulletDamage()+" obrazen, teraz posiada "+enemies.get(i).getEnemyHP()+" HP");//debug note
+                    if(enemies.get(i).isEnemyAlive()==0){
+                        enemies.removeIndex(i);
+                        enemy.killSound.play();
+                    }
                     bullet.destroy();
-                    enemy.killSound.play();
                     break;
                 }
             }
