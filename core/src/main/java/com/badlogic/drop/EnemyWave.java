@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
@@ -30,6 +31,8 @@ public class EnemyWave {
     public void setShootInterval(float interval) {
         this.shootInterval = interval;
     }
+    //tekstury dla paska HP wrogow
+    Texture barFillTexture = new Texture("progressBar_green.png");
 
     public Array<EnemyBullet> enemyBullets = new Array<>();
     ////////////////////////
@@ -49,6 +52,9 @@ public class EnemyWave {
         float width = enemyTemplate.sprite.getWidth();
         float height = enemyTemplate.sprite.getHeight();
         Texture texture = enemyTemplate.sprite.getTexture();
+        float enemyHP = enemyTemplate.EnemyHP;
+        float enemyBulletDamage = enemyTemplate.EnemyBulletDamage;
+        float bulletSpeed = enemyTemplate.EnemyBulletSpeed;
 
         // Wysokość ekranu, aby ustawić przeciwników na odpowiedniej wysokości
         float worldHeight = viewport.getWorldHeight();
@@ -62,7 +68,7 @@ public class EnemyWave {
 
         for (int i = 0; i < amount; i++) {
             float x = startX + i * (width + spacing);
-            Enemy newEnemy = new Enemy(texture, x, y, width, height);
+            Enemy newEnemy = new Enemy(texture, x, y, width, height,enemyHP,enemyBulletDamage,bulletSpeed);
             enemies.add(newEnemy);
         }
     }
@@ -75,6 +81,9 @@ public class EnemyWave {
         float width = enemyTemplate.sprite.getWidth();
         float height = enemyTemplate.sprite.getHeight();
         Texture texture = enemyTemplate.sprite.getTexture();
+        float enemyHP = enemyTemplate.EnemyHP;
+        float enemyBulletDamage = enemyTemplate.EnemyBulletDamage;
+        float bulletSpeed = enemyTemplate.EnemyBulletSpeed;
 
         // Wysokość ekranu, aby ustawić przeciwników na odpowiedniej wysokości
         float worldHeight = viewport.getWorldHeight();
@@ -89,7 +98,7 @@ public class EnemyWave {
 
         for (int i = 0; i < amount; i++) {
             float x = startX + i * (width + spacing);
-            Enemy enemy = new Enemy(texture, x, y, width, height);
+            Enemy enemy = new Enemy(texture, x, y, width, height,enemyHP,enemyBulletDamage,bulletSpeed);
             enemies.add(enemy);
         }
     }
@@ -154,7 +163,7 @@ public class EnemyWave {
             float x = shooter.sprite.getX() + shooter.sprite.getWidth() / 2f - 0.05f;
             float y = shooter.sprite.getY();
 
-            EnemyBullet bullet = new EnemyBullet(x, y);
+            EnemyBullet bullet = new EnemyBullet(x, y,shooter);//pocisk dostaje ilosc obrazen po podanym Enemy wybranym z listy w wave
             enemyBullets.add(bullet);
         }
     }
@@ -175,16 +184,37 @@ public class EnemyWave {
         }
     }
     //wykrycie kolizji z graczem
-    public boolean checkCollisionWithPlayer(Rectangle playerBounds, Sound hitSound) {
+    public void checkCollisionWithPlayer(Rectangle playerBounds, Sound hitSound, Player player) {
         for (int i = enemyBullets.size - 1; i >= 0; i--) {
             EnemyBullet bullet = enemyBullets.get(i);
+            // trafienie gracza
             if (bullet.getBounds().overlaps(playerBounds)) {
+                player.PlayerTakeHit(enemyBullets.get(i).getEnemyByBullet().getEnemyBulletDamage());
+                System.out.println("Gracz otrzymal "+enemyBullets.get(i).getEnemyByBullet().getEnemyBulletDamage()+" obrazen, teraz posiada "+player.getPlayerHP()+" HP");//debug note
                 enemyBullets.removeIndex(i);
                 hitSound.play();
-                return true; // trafienie gracza
             }
         }
-        return false;
+    }
+    //czyszczenie pociskow ktore zostaly z poprzedniej fali
+    private void clearLeftEnemiesBullets(){
+        enemyBullets.clear();
+    }
+
+    //metoda do tworzenia nowej fali po skonczeniu poprzedniej
+    public void generateNewWave(Array<Enemy>  enemyTypes, FitViewport viewport,Player player){
+        int enemyRows = MathUtils.random(1, 5);
+        for(int i=0;i<enemyRows;i++){
+            int getEnemyType = MathUtils.random(0,enemyTypes.size-1);
+            int enemiesInRow = MathUtils.random(1,12);//12-max rozmiar wiersza wrogow
+            addRow(viewport, enemiesInRow, i, enemyTypes.get(getEnemyType));
+        }
+        clearLeftEnemiesBullets();
+        player.clearLeftPlayerBullets();
+    }
+    //metoda sprawdzania czy zabito wszystkich przeciwnikow
+    public int isAnyEnemyLeftOnField(){
+        return enemies.size;
     }
     public Array<Enemy> getEnemies() {
         return enemies;
@@ -195,6 +225,20 @@ public class EnemyWave {
             enemy.sprite.draw(batch);
         }
     }
+
+    public void renderEnemyHPBar(SpriteBatch batch){
+        for (Enemy enemy : enemies) {
+            float progress = Math.max(0, Math.min(enemy.getEnemyHP() / enemy.getEnemyMaxHP(), 1f));
+            float barWidth = 0.25f;//szerokosc
+            float barHeight = 0.02f;//wysokosc
+            float centerX = enemy.getEnemySprite().getX()+ enemy.getEnemySprite().getWidth() / 2f;//srodek sprite'a tekstury przeciwnika
+            float barX = centerX - barWidth /2f;//polozenie x
+            float barY = enemy.getEnemySprite().getY();//polozenie y
+            float fillWidth = Math.min(progress * barWidth, barWidth);
+            batch.draw(barFillTexture, barX, barY, fillWidth, barHeight);
+        }
+    }
+
 
     public void update(float delta, Viewport viewport, Array<PlayerBullet> bullets) {
         for (int i = enemies.size - 1; i >= 0; i--) {
@@ -208,9 +252,14 @@ public class EnemyWave {
 
             for (PlayerBullet bullet : bullets) {
                 if (bullet.collides(bounds)) {
-                    enemies.removeIndex(i);
+                    enemies.get(i).EnemyTakeHit(bullet.getBulletDamage());
+                    System.out.println("Przeciwnik otrzymal "+bullet.getBulletDamage()+" obrazen, teraz posiada "+enemies.get(i).getEnemyHP()+" HP");//debug note
+                    //TODO tutaj dodac dzwiek otrzymania obrazen przez przeciwnika
+                    if(enemies.get(i).isEnemyAlive()==0){
+                        enemies.removeIndex(i);
+                        enemy.killSound.play();
+                    }
                     bullet.destroy();
-                    enemy.killSound.play();
                     break;
                 }
             }

@@ -21,16 +21,27 @@ public class Player {
     private Sound bulletSound;
     private float speed = 4f;
     private Array<PlayerBullet> bullets;
+    float PlayerHP;
+    float PlayerMaxHP;
+    float PlayerDamage;
+    int playerAlive=1;  //zmienna do sprawdzenia czy player zyje
     private float shootDelay = 0.8f;//opoznienie strzalu
     private float shootTimer = 0f;//licznik opoznienia strzalu
+    private final float playerStartXPosition = 8-0.5f;
+    private final float playerStartYPosition = 0.8f;
+    //tekstury
+    Texture barFillTexture = new Texture("progressBar_green.png");// textura dla paska shootDelay
+    Texture HPBarTexture = new Texture("progressBar_white.png");// textura dla HP gracza
 
     public Player() {
         texture = new Texture("spaceship.png");
         bulletSound = Gdx.audio.newSound(Gdx.files.internal("laserShoot.wav"));
         sprite = new Sprite(texture);
         sprite.setSize(.5f, .5f);
-        sprite.setPosition(4 - 0.5f, .8f); // centrowanie na środku
-
+        sprite.setPosition(playerStartXPosition, playerStartYPosition); // centrowanie na środku
+        PlayerHP = 20f;//poczatkowe HP gracza
+        PlayerMaxHP = PlayerHP;//max HP gracza
+        PlayerDamage = 5f;//poczatkowe damage gracza
         bullets = new Array<>();
         bounds = new Rectangle(sprite.getX(), sprite.getY(),
             sprite.getWidth(), sprite.getHeight());
@@ -61,7 +72,7 @@ public class Player {
 
             float bulletX = sprite.getX() + sprite.getWidth() / 2f-.05f;
             float bulletY = sprite.getY() + sprite.getHeight();
-            bullets.add(new PlayerBullet(bulletX, bulletY));
+            bullets.add(new PlayerBullet(bulletX, bulletY,PlayerDamage));
             bulletSound.play();
         }
 
@@ -82,26 +93,25 @@ public class Player {
         }
     }
     public void renderShootCooldownBar(SpriteBatch batch){
-        float barWidth = 200f;    // Szerokość paska
-        float barHeight = 20f;    // Wysokość paska
-        float barX = 20f;         // Pozycja X paska (lewy margines)
-        float barY = 20f;         // Pozycja Y paska (dolny margines)
-        ShapeRenderer shapeRenderer = new ShapeRenderer();
+        float barWidth = 2f;//szerokosc
+        float barHeight = 0.15f;//wysokosc
+        float barX = 0.5f;//polozenie x
+        float barY = 0.3f;//polozenie y
 
-        //oblicza procent wypełnienia (ograniczony do zakresu 0-1)
         float progress = Math.min(shootTimer / shootDelay, 1f);
-
-        //oblicza szerokość wypełnienia (ograniczoną do barWidth)
         float fillWidth = Math.min(progress * barWidth, barWidth);
 
-        // Tło paska (szary prostokąt)
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.GRAY);
-        shapeRenderer.rect(barX, barY, barWidth, barHeight);
-
-        shapeRenderer.setColor(Color.GREEN);
-        shapeRenderer.rect(barX, barY, fillWidth, barHeight);
-        shapeRenderer.end();
+        // Rysowanie paska
+        batch.draw(barFillTexture, barX, barY, fillWidth, barHeight);
+    }
+    public void renderPlayerHPBar(SpriteBatch batch){
+        float barWidth = 2f;//szerokosc
+        float barHeight = 0.15f;//wysokosc
+        float barX = 13.5f;//polozenie x
+        float barY = 0.3f;//polozenie y
+        float progress = Math.max(0, Math.min(PlayerHP / PlayerMaxHP, 1f));
+        float fillWidth = Math.min(progress * barWidth, barWidth);
+        batch.draw(HPBarTexture, barX, barY, fillWidth, barHeight);
     }
     public Rectangle getBounds() {
         return bounds;
@@ -116,4 +126,36 @@ public class Player {
     public Array<PlayerBullet> getBulletsArray(){
         return bullets;
     }
+    public void PlayerTakeHit(float damage){
+        PlayerHP -= damage;
+        if(PlayerHP <= 0){
+            playerAlive=0;
+        }
+    }
+
+    public void clearLeftPlayerBullets(){
+        bullets.clear();
+    }
+    //zwraca 0 gdy hp gracza <= 0
+    public int isPlayerAlive(){
+        return playerAlive;
+    }
+    public float getPlayerHP(){
+        return PlayerHP;
+    }
+    public float getPlayerDamage(){
+        return PlayerDamage;
+    }
+    public void resetPlayerPosition(){
+        sprite.setPosition(playerStartXPosition, playerStartYPosition); // centrowanie na środku
+    }
+    public void resetPlayerHP(){
+        PlayerHP = 20f;//poczatkowe HP gracza
+    }
+    public void activeCheatCode(){
+        PlayerHP = 1000;
+        PlayerDamage = 1000;
+        shootDelay = 0;
+    }
+
 }

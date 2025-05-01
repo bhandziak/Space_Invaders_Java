@@ -18,15 +18,16 @@ public class PlayerBullet {
     private float bulletTimer;
     private float speed = 4f;
     private boolean isAlive = true;
+    float PlayerBulletDamage;
 
-    public PlayerBullet(float x, float y) {
+    public PlayerBullet(float x, float y,float playerBulletDamage) {
         bulletTexture = new Texture("drop.png");
-        //do zmiany
 
         bulletSprite = new Sprite(bulletTexture);
         bulletSprite.setSize(0.05f, 0.3f);
         bulletSprite.setPosition(x, y);
         bulletRectangle = new Rectangle(x, y, bulletSprite.getWidth(), bulletSprite.getHeight());
+        PlayerBulletDamage = playerBulletDamage;
     }
 
     public void update(float delta, Viewport viewport) {
@@ -53,5 +54,9 @@ public class PlayerBullet {
 
     public void destroy() {
         isAlive = false;
+    }
+
+    public float getBulletDamage(){
+        return PlayerBulletDamage;
     }
 }

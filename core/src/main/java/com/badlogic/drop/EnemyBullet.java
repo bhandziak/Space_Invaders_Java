@@ -9,17 +9,19 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class EnemyBullet {
     private Texture texture;
     private Sprite sprite;
-    private float speed = 3f;
-
-    public EnemyBullet(float x, float y) {
+    private float bulletSpeed;
+    private Enemy enemy;
+    public EnemyBullet(float x, float y,Enemy enemyTemplate) {
         texture = new Texture("drop.png");
         sprite = new Sprite(texture);
-        sprite.setSize(0.1f, 0.4f) ;
+        sprite.setSize(0.1f, 0.4f);
         sprite.setPosition(x, y);
+        enemy = enemyTemplate;
+        bulletSpeed = enemyTemplate.EnemyBulletSpeed;
     }
 
     public void update(float delta) {
-        sprite.translateY(-speed * delta);
+        sprite.translateY(-bulletSpeed * delta);
     }
 
     public void render(SpriteBatch batch) {
@@ -32,5 +34,9 @@ public class EnemyBullet {
 
     public Rectangle getBounds() {
         return sprite.getBoundingRectangle();
+    }
+
+    public Enemy getEnemyByBullet(){
+        return enemy;
     }
 }
