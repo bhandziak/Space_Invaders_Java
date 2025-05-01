@@ -60,14 +60,11 @@ public class MainMenuScreen implements Screen {
         stage.addActor(storeButton);
 
         // LOGO
-        Texture logoTexture = new Texture(Gdx.files.internal("SpaceInvadersLogo.png"));
-        Image logo = new Image(logoTexture);
 
-        logo.setSize(500, 250);
-        logo.setPosition(
-            Gdx.graphics.getWidth() / 2f -  logo.getWidth() / 2f,
-            Gdx.graphics.getHeight() - logo.getHeight()
-        );
+        float logoPosX = Gdx.graphics.getWidth() / 2f -  500f / 2f;
+        float logoPosY = Gdx.graphics.getHeight() - 250f;
+
+        Image logo = ImageFactory.create("SpaceInvadersLogo.png", logoPosX, logoPosY, 500, 250);
 
         stage.addActor(logo);
 
