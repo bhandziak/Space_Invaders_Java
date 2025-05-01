@@ -7,8 +7,11 @@ import com.badlogic.gdx.Game;
 public class Main extends Game {
 
     public boolean[] bought_spaceship ={
-        true, false, false
+        false, false, false
     };
+    public Player selectedSpaceShip;
+    public int selectedSpaceShipId = 5;
+    public int money = 600;
     @Override
     public void create() {
         setScreen(new MainMenuScreen(this));

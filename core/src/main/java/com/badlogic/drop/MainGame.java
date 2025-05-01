@@ -50,7 +50,13 @@ public class MainGame implements Screen {
         enemyWhiteTexture = new Texture("enemy_white.png");//tekstura enemy-white
         enemyGreenTexture = new Texture("enemy_green.png");//tekstura enemy-green
         //player
-        player = new Player();
+        if(game.selectedSpaceShip == null){
+            player = new Player();
+        }else{
+            player = game.selectedSpaceShip;
+        }
+
+
         hitSound = Gdx.audio.newSound(Gdx.files.internal("playerDamage.wav"));//dziwiek otrzymania obrazen
 
         //enemy - tutaj mozna dodac nowe typy przeciwnikow

@@ -24,10 +24,9 @@ public class StoreScreen implements Screen {
     private final String spaceship_twin_fang_name = "Twin Fang";
     private final String spaceship_meteor_lance_name = "Meteor Lance";
 
-    private final String spaceship_starling_desc = "A nimble and reliable fighter,\nperfect for quick strikes and agile maneuvers.";
-    private final String spaceship_twin_fang_desc = "Equipped with twin blasters,\nthis ship delivers double the firepower with deadly precision.";
-    private final String spaceship_meteor_lance_desc = "Fires a powerful, slow-moving projectile\ncapable of destroying enemy lines.";
-
+    private final String spaceship_starling_desc = "A lightweight, high-speed fighter\nideal for fast evasive maneuvers\nand quick strikes.";
+    private final String spaceship_twin_fang_desc = "Balanced and efficient,\nits twin blasters offer steady firepower\nin intense battles.";
+    private final String spaceship_meteor_lance_desc = "Heavily armored and slow,\nlaunches a single powerful blast to\nbreak through enemy lines.";
 
     private final String goBackButton_Text = "GO BACK";
     private final String storeTitle_Text = "Welcome to the store!";
@@ -38,7 +37,7 @@ public class StoreScreen implements Screen {
     private final float buttonWidth = 250f;
     private final float buttonHeight = 80f;
 
-    private final int[] spacehip_prices = {
+    private final int[] spaceships_price = {
       0, 150, 300
     };
 
@@ -72,10 +71,14 @@ public class StoreScreen implements Screen {
         stage.addActor(goBackButton);
 
         Label welcomeText = TextFieldFactory.create(
-            storeTitle_Text, textSize2, 10, Gdx.graphics.getHeight() - textSize2 - 10, Color.GREEN
+            storeTitle_Text, textSize2, 10f, Gdx.graphics.getHeight() - textSize2 - 10f, Color.GREEN
         );
         stage.addActor(welcomeText);
 
+        Label moneyText = TextFieldFactory.create(
+            "MONEY : ".concat(String.valueOf(game.money)), textSize, Gdx.graphics.getWidth() - 450f, Gdx.graphics.getHeight() - textSize - 10f, Color.GREEN
+        );
+        stage.addActor(moneyText);
 
         // SPACESHIPS
         float imagePosX = 200f;
@@ -94,7 +97,7 @@ public class StoreScreen implements Screen {
         );
         stage.addActor(spaceship_starling_text);
         Label spaceship_starling_text2 = TextFieldFactory.create(
-            spaceship_starling_desc , textSize3, namePosX, 480f, Color.WHITE
+            spaceship_starling_desc , textSize3, namePosX, 465f, Color.WHITE
         );
         stage.addActor(spaceship_starling_text2);
 
@@ -108,7 +111,7 @@ public class StoreScreen implements Screen {
         );
         stage.addActor(spaceship_twin_fang_text);
         Label spaceship_twin_fang_text2 = TextFieldFactory.create(
-            spaceship_twin_fang_desc, textSize3, namePosX, 330f, Color.WHITE
+            spaceship_twin_fang_desc, textSize3, namePosX, 315f, Color.WHITE
         );
         stage.addActor(spaceship_twin_fang_text2);
 
@@ -122,7 +125,7 @@ public class StoreScreen implements Screen {
         );
         stage.addActor(spaceship_meteor_lance_text);
         Label spaceship_meteor_lance_text2 = TextFieldFactory.create(
-            spaceship_meteor_lance_desc, textSize3, namePosX, 180f, Color.WHITE
+            spaceship_meteor_lance_desc, textSize3, namePosX, 165f, Color.WHITE
         );
         stage.addActor(spaceship_meteor_lance_text2);
 
@@ -131,8 +134,9 @@ public class StoreScreen implements Screen {
         float pricePosY = 525f;
 
         for(int i =0; i < 3; i++){
+            int finalI = i;
             Label price_text = TextFieldFactory.create(
-                "price: ".concat(String.valueOf(spacehip_prices[i])), textSize2, pricePosX, pricePosY, Color.YELLOW
+                "price: ".concat(String.valueOf(spaceships_price[i])), textSize2, pricePosX, pricePosY, Color.YELLOW
             );
 
             stage.addActor(price_text);
@@ -143,22 +147,58 @@ public class StoreScreen implements Screen {
                     "BUY", textSize2, buyPosX, pricePosY, 100f, 40f
                 );
                 stage.addActor(buy_button);
-                int finalI = i;
+
                 buy_button.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         // buy spaceship
-                        System.out.println("Buy spaceship nr. ".concat(String.valueOf(finalI)));
-                        game.bought_spaceship[finalI] = true;
-                        loadContent();
+                        if(spaceships_price[finalI] <= game.money){
+                            System.out.println("Buy spaceship nr. ".concat(String.valueOf(finalI)));
+                            game.bought_spaceship[finalI] = true;
+                            game.money -= spaceships_price[finalI];
+                            loadContent();
+                        }else{
+                            System.out.println("Not enough money!");
+                        }
+
                     }
                 });
             }
 
             TextButton select_button = TextButtonFactory.create(
-                "SELECT", textSize2, selectPosX, pricePosY, 100f, 40f
+                "SELECT", textSize2, selectPosX, pricePosY, 100f, 40f,
+                game.selectedSpaceShipId == finalI ? Color.BLUE : Color.WHITE
             );
             stage.addActor(select_button);
+            select_button.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    // buy spaceship
+                    System.out.println("Select spaceship nr. ".concat(String.valueOf(finalI)));
+
+                    if(game.bought_spaceship[finalI]){
+                        switch (finalI) {
+                            case 0:
+                                game.selectedSpaceShip = new SpaceShip_Starlink();
+                                break;
+                            case 1:
+                                game.selectedSpaceShip = new SpaceShip_TwinFang();
+                                break;
+                            case 2:
+                                game.selectedSpaceShip = new SpaceShip_MeteorLance();
+                                break;
+                            default:
+                                game.selectedSpaceShip = new Player();
+                        }
+                        game.selectedSpaceShipId = finalI;
+                    }else{
+                        System.out.println("Statek musi byc najpierw kupiony!");
+                    }
+
+
+                    loadContent();
+                }
+            });
 
             pricePosY -= 150f;
         }

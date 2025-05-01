@@ -12,7 +12,7 @@ public class EnemyBullet {
     private float bulletSpeed;
     private Enemy enemy;
     public EnemyBullet(float x, float y,Enemy enemyTemplate) {
-        texture = new Texture("drop.png");
+        texture = new Texture("bullet.png");
         sprite = new Sprite(texture);
         sprite.setSize(0.1f, 0.4f);
         sprite.setPosition(x, y);

@@ -10,9 +10,17 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class TextButtonFactory {
 
+    // defaultColor is WHITE
     public static TextButton create(
         String buttonText, int fontSize, float xPosition, float yPosition,
-        float buttonWidth, float buttonHeight) {
+        float buttonWidth, float buttonHeight
+    ) {
+        return create(buttonText, fontSize, xPosition, yPosition, buttonWidth, buttonHeight, Color.WHITE);
+    }
+
+    public static TextButton create(
+        String buttonText, int fontSize, float xPosition, float yPosition,
+        float buttonWidth, float buttonHeight, Color defaultColor ) {
         // Font generation
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font_retro_gaming.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -23,7 +31,7 @@ public class TextButtonFactory {
         // Button style
         TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
         style.font = buttonFont;
-        style.fontColor = Color.WHITE;
+        style.fontColor = defaultColor;
         style.overFontColor = Color.YELLOW;
         style.downFontColor = Color.GRAY;
 
