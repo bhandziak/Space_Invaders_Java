@@ -1,10 +1,7 @@
 package com.badlogic.drop;
 
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 
-import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -37,8 +34,17 @@ public class MainGame implements Screen {
     //tablica na typy przeciwnikow
     Array<Enemy> EnemyTypes = new Array<>();
 
+    //flaga zatrzymania gry
+    private boolean isPaused = false;
+    private boolean wasPaused = false;
+    private PauseScreen pauseScreen;
+    private boolean isGameOver = false;
+    private GameOverScreen gameOverScreen;
+
     public MainGame(Main game) {
         this.game = game;
+        pauseScreen = new PauseScreen(game);
+        gameOverScreen = new GameOverScreen(game);
         // wszystko z metody create()
         // Prepare your application here.
         spriteBatch = new SpriteBatch();//batch
@@ -96,13 +102,30 @@ public class MainGame implements Screen {
     @Override
     public void render(float v) {
         // Draw your application here.
-        input();
-        logic();
-        draw();
+        if(isGameOver){
+            draw();
+            gameOverScreen.render();
+        }else{
+            input();
+            if(!isPaused) {
+                logic();
+                draw();
+                wasPaused = false;
+            }else{
+                if (!wasPaused) {
+                    pauseScreen.show();
+                    wasPaused = true;
+                }
+                draw();
+                pauseScreen.render();
+            }
+        }
     }
 
     public void input(){
-
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            isPaused = !isPaused;
+        }
     }
     public void logic(){
         float delta = Gdx.graphics.getDeltaTime();//czas gry
@@ -124,6 +147,7 @@ public class MainGame implements Screen {
         }
         if(player.isPlayerAlive()==0){
             //TODO tutaj wywolanie UI z oknem przegranej
+            isGameOver = true;
         }
     }
     public void draw(){
@@ -167,5 +191,7 @@ public class MainGame implements Screen {
         spriteBatch.dispose();
         backgroundTexture.dispose();
         player.dispose();
+        pauseScreen.dispose();
+        gameOverScreen.dispose();
     }
 }

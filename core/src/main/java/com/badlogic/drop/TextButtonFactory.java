@@ -31,9 +31,15 @@ public class TextButtonFactory {
         // Button style
         TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
         style.font = buttonFont;
+
         style.fontColor = defaultColor;
-        style.overFontColor = Color.YELLOW;
-        style.downFontColor = Color.GRAY;
+        if(defaultColor == Color.BLUE){
+            style.overFontColor = defaultColor;
+            style.downFontColor = defaultColor;
+        }else{
+            style.overFontColor = Color.YELLOW;
+            style.downFontColor = Color.GRAY;
+        }
 
         TextButton playButton = new TextButton(buttonText, style);
 

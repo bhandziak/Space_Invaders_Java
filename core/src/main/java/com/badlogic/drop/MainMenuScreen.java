@@ -2,10 +2,11 @@ package com.badlogic.drop;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -19,9 +20,7 @@ public class MainMenuScreen implements Screen {
 
     private final String playButton_Text = "PLAY";
     private final String storeButton_Text = "STORE";
-    private final int textSize = 50;
-    private final float buttonWidth = 250f;
-    private final float buttonHeight = 80f;
+
 
     public MainMenuScreen(final Main game) {
         this.game = game;
@@ -29,10 +28,10 @@ public class MainMenuScreen implements Screen {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
-        float playButtonPosX = Gdx.graphics.getWidth() / 2f - buttonWidth / 2f;
-        float playButtonPosY = Gdx.graphics.getHeight() / 2f - buttonHeight / 2f;
+        float playButtonPosX = Gdx.graphics.getWidth() / 2f - UsefullConstans.buttonWidth / 2f;
+        float playButtonPosY = Gdx.graphics.getHeight() / 2f - UsefullConstans.buttonHeight / 2f;
 
-        playButton = TextButtonFactory.create(playButton_Text, textSize, playButtonPosX, playButtonPosY, buttonWidth, buttonHeight);
+        playButton = TextButtonFactory.create(playButton_Text, UsefullConstans.textSize, playButtonPosX, playButtonPosY, UsefullConstans.buttonWidth, UsefullConstans.buttonHeight);
 
         playButton.addListener(new ClickListener() {
             @Override
@@ -42,10 +41,10 @@ public class MainMenuScreen implements Screen {
             }
         });
 
-        float storeButtonPosX = Gdx.graphics.getWidth() / 2f - buttonWidth / 2f;
-        float storeButtonPosY = Gdx.graphics.getHeight() / 2f - 1.8f* buttonHeight;
+        float storeButtonPosX = Gdx.graphics.getWidth() / 2f - UsefullConstans.buttonWidth / 2f;
+        float storeButtonPosY = Gdx.graphics.getHeight() / 2f - 1.8f* UsefullConstans.buttonHeight;
 
-        storeButton = TextButtonFactory.create(storeButton_Text, textSize, storeButtonPosX, storeButtonPosY, buttonWidth, buttonHeight);
+        storeButton = TextButtonFactory.create(storeButton_Text, UsefullConstans.textSize, storeButtonPosX, storeButtonPosY, UsefullConstans.buttonWidth, UsefullConstans.buttonHeight);
 
         storeButton.addListener(new ClickListener() {
             @Override
@@ -58,6 +57,16 @@ public class MainMenuScreen implements Screen {
 
         stage.addActor(playButton);
         stage.addActor(storeButton);
+
+        // high score info
+
+        float highScorePosX = storeButtonPosX - 25f;
+        float highScorePosY = storeButtonPosY - UsefullConstans.textSize - 10f;
+
+        Label highScoreText = TextFieldFactory.create(
+            "RECORD SCORE: ".concat(String.valueOf(game.recordScore)), UsefullConstans.textSize2, highScorePosX, highScorePosY, Color.WHITE
+        );
+        stage.addActor(highScoreText);
 
         // LOGO
 
