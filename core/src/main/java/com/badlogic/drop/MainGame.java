@@ -38,12 +38,17 @@ public class MainGame implements Screen {
     private boolean isPaused = false;
     private boolean wasPaused = false;
     private PauseScreen pauseScreen;
+    private InGameUI inGameUI;
     private boolean isGameOver = false;
+    private boolean isGameUIshowed = false;
     private GameOverScreen gameOverScreen;
 
     public MainGame(Main game) {
         this.game = game;
+        game.score = 0;
         pauseScreen = new PauseScreen(game);
+        //ingame UI
+        inGameUI = new InGameUI(game);
         gameOverScreen = new GameOverScreen(game);
         // wszystko z metody create()
         // Prepare your application here.
@@ -66,8 +71,8 @@ public class MainGame implements Screen {
         hitSound = Gdx.audio.newSound(Gdx.files.internal("playerDamage.wav"));//dziwiek otrzymania obrazen
 
         //enemy - tutaj mozna dodac nowe typy przeciwnikow
-        enemyWhite = new Enemy(enemyWhiteTexture, 0, 0, .7f, .7f,5f,2f,2.5f);
-        enemyGreen = new Enemy(enemyGreenTexture, 0, 0, .7f, .7f,10f,3f,3.5f);
+        enemyWhite = new Enemy(enemyWhiteTexture, 0, 0, .7f, .7f,5f,2f,2.5f,100);
+        enemyGreen = new Enemy(enemyGreenTexture, 0, 0, .7f, .7f,10f,3f,3.5f,250);
 
         //wave - reczne tworzenie fali - w razie potrzeby
         //enemyWave = new EnemyWave(enemyWhite);
@@ -82,7 +87,7 @@ public class MainGame implements Screen {
         EnemyTypes.add(enemyWhite,enemyGreen);
 
         //generowanie losowej pierwszej fali
-        enemyWave = new EnemyWave(enemyWhite);
+        enemyWave = new EnemyWave(enemyWhite,game);
         enemyWave.generateNewWave(EnemyTypes, viewport,player);
 
         //test only
@@ -103,6 +108,7 @@ public class MainGame implements Screen {
     public void render(float v) {
         // Draw your application here.
         if(isGameOver){
+            inGameUI.hide(); // wyłączenie interfejsu gry (score)
             draw();
             gameOverScreen.render();
         }else{
@@ -110,6 +116,12 @@ public class MainGame implements Screen {
             if(!isPaused) {
                 logic();
                 draw();
+                //ingameUI
+                inGameUI.render();
+                if(!isGameUIshowed){
+                    inGameUI.show();
+                    isGameUIshowed = true;
+                }
                 wasPaused = false;
             }else{
                 if (!wasPaused) {
@@ -146,8 +158,9 @@ public class MainGame implements Screen {
             //player.activeCheatCode();
         }
         if(player.isPlayerAlive()==0){
-            //TODO tutaj wywolanie UI z oknem przegranej
+            //wywolanie UI z oknem przegranej
             isGameOver = true;
+            game.updateHighscore();//aktualizacja highscore
         }
     }
     public void draw(){
@@ -192,6 +205,8 @@ public class MainGame implements Screen {
         backgroundTexture.dispose();
         player.dispose();
         pauseScreen.dispose();
+        inGameUI.dispose();
         gameOverScreen.dispose();
     }
+
 }

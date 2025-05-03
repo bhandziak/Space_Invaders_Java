@@ -34,10 +34,13 @@ public class EnemyWave {
     //tekstury dla paska HP wrogow
     Texture barFillTexture = new Texture("progressBar_green.png");
 
+    //potrzebne do zmiany Score
+    final Main game;
     public Array<EnemyBullet> enemyBullets = new Array<>();
     ////////////////////////
 
-    public EnemyWave(Enemy enemyTemplate) {
+    public EnemyWave(Enemy enemyTemplate, final Main game) {
+        this.game = game;
         this.enemyTemplate = enemyTemplate;
         this.enemies = new Array<>();
         this.moveDownStep = enemyTemplate.sprite.getHeight();//przesuniecie o wysokość przeciwnika
@@ -55,6 +58,7 @@ public class EnemyWave {
         float enemyHP = enemyTemplate.EnemyHP;
         float enemyBulletDamage = enemyTemplate.EnemyBulletDamage;
         float bulletSpeed = enemyTemplate.EnemyBulletSpeed;
+        int scorePoints = enemyTemplate.ScorePoints;
 
         // Wysokość ekranu, aby ustawić przeciwników na odpowiedniej wysokości
         float worldHeight = viewport.getWorldHeight();
@@ -68,12 +72,13 @@ public class EnemyWave {
 
         for (int i = 0; i < amount; i++) {
             float x = startX + i * (width + spacing);
-            Enemy newEnemy = new Enemy(texture, x, y, width, height,enemyHP,enemyBulletDamage,bulletSpeed);
+            Enemy newEnemy = new Enemy(texture, x, y, width, height,enemyHP,enemyBulletDamage,bulletSpeed,scorePoints);
             enemies.add(newEnemy);
         }
     }
     public void addRow(Viewport viewport, int amount, int row, Enemy enemyTemplate) {
         float spacing = 0.25f;
+
         // Szerokość ekranu (do wycentrowania)
         float worldWidth = viewport.getWorldWidth();
 
@@ -84,10 +89,13 @@ public class EnemyWave {
         float enemyHP = enemyTemplate.EnemyHP;
         float enemyBulletDamage = enemyTemplate.EnemyBulletDamage;
         float bulletSpeed = enemyTemplate.EnemyBulletSpeed;
+        int scorePoints = enemyTemplate.ScorePoints;
 
+        //offset od gory ekranu
+        float offset = 0.6f;
         // Wysokość ekranu, aby ustawić przeciwników na odpowiedniej wysokości
         float worldHeight = viewport.getWorldHeight();
-        float y = worldHeight - height - 0.7f * row;
+        float y = (worldHeight - height - 0.7f * row) -offset;
 
         // Całkowita szerokość fali przeciwników
         float totalWidth = amount * width + (amount - 1) * spacing;
@@ -98,7 +106,7 @@ public class EnemyWave {
 
         for (int i = 0; i < amount; i++) {
             float x = startX + i * (width + spacing);
-            Enemy enemy = new Enemy(texture, x, y, width, height,enemyHP,enemyBulletDamage,bulletSpeed);
+            Enemy enemy = new Enemy(texture, x, y, width, height,enemyHP,enemyBulletDamage,bulletSpeed,scorePoints);
             enemies.add(enemy);
         }
     }
@@ -255,7 +263,9 @@ public class EnemyWave {
                     enemies.get(i).EnemyTakeHit(bullet.getBulletDamage());
                     System.out.println("Przeciwnik otrzymal "+bullet.getBulletDamage()+" obrazen, teraz posiada "+enemies.get(i).getEnemyHP()+" HP");//debug note
                     //TODO tutaj dodac dzwiek otrzymania obrazen przez przeciwnika
+                    //Zabicie przeciwnika przez gracza
                     if(enemies.get(i).isEnemyAlive()==0){
+                        game.score += enemies.get(i).ScorePoints;//update score
                         enemies.removeIndex(i);
                         enemy.killSound.play();
                     }
