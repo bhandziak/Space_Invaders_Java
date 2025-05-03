@@ -102,7 +102,7 @@ public class MainGame implements Screen {
         bunkers.add(new ShieldBuilding(13, 2f));
 
         //test only
-        player.activeCheatCode();
+        //player.activeCheatCode();
     }
 
     @Override
