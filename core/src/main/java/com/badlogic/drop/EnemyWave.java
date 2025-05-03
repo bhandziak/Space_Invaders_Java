@@ -15,7 +15,6 @@ public class EnemyWave {
     private Enemy enemyTemplate;
     private Array<Enemy> enemies;
 
-
     //odpowiada za ruch przeciwnikow
     private float moveTimer = 0f;
     private float moveInterval = 1f; //move delay
@@ -37,6 +36,10 @@ public class EnemyWave {
     //potrzebne do zmiany Score
     final Main game;
     public Array<EnemyBullet> enemyBullets = new Array<>();
+
+    //Coin
+    private float dropCoinRate = .3f;//szansa na drop monety
+    Array<Coin> coins = new Array<>();
     ////////////////////////
 
     public EnemyWave(Enemy enemyTemplate, final Main game) {
@@ -246,7 +249,13 @@ public class EnemyWave {
             batch.draw(barFillTexture, barX, barY, fillWidth, barHeight);
         }
     }
-
+    //Funkcja do liczenia szansy na drop monety
+    public boolean chanceForCoinDrop() {
+        return MathUtils.random() < dropCoinRate;
+    }
+    public Array<Coin> getArrayCoins(){
+        return coins;
+    }
 
     public void update(float delta, Viewport viewport, Array<PlayerBullet> bullets) {
         for (int i = enemies.size - 1; i >= 0; i--) {
@@ -266,6 +275,13 @@ public class EnemyWave {
                     //Zabicie przeciwnika przez gracza
                     if(enemies.get(i).isEnemyAlive()==0){
                         game.score += enemies.get(i).ScorePoints;//update score
+                        //szansa na drop monety przez przeciwnika
+                        if(chanceForCoinDrop()){
+                            game.money += 5;
+                            Coin coin = new Coin(enemies.get(i).sprite.getX(),enemies.get(i).sprite.getY());
+                            coins.add(coin);
+                            coin.playSound();
+                        }
                         enemies.removeIndex(i);
                         enemy.killSound.play();
                     }

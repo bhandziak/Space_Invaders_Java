@@ -17,7 +17,6 @@ public class MainGame implements Screen {
 
     SpriteBatch spriteBatch;
     FitViewport viewport;
-
     //Player
     Player player;
     Sound hitSound;//dziwiek otrzymania obrazen
@@ -27,7 +26,8 @@ public class MainGame implements Screen {
     Texture enemyGreenTexture;
     Enemy enemyWhite;//5hp   2dmg
     Enemy enemyGreen;//10hp  3dmg
-
+    //coin
+    Array<Coin> coins = new Array<>();
     //Wave - fala przeciwnikow
     EnemyWave enemyWave;
 
@@ -55,7 +55,6 @@ public class MainGame implements Screen {
         spriteBatch = new SpriteBatch();//batch
         //rozmiar ekranu
         viewport = new FitViewport(16, 9);
-
 
         backgroundTexture = new Texture("background_black.png");//tlo
         enemyWhiteTexture = new Texture("enemy_white.png");//tekstura enemy-white
@@ -162,6 +161,13 @@ public class MainGame implements Screen {
             isGameOver = true;
             game.updateHighscore();//aktualizacja highscore
         }
+        // Aktualizacja coins
+        for (int i = coins.size - 1; i >= 0; i--) {
+            coins.get(i).update(delta);
+            if (coins.get(i).isFinished()) {
+                coins.removeIndex(i);
+            }
+        }
     }
     public void draw(){
         ScreenUtils.clear(Color.BLACK);
@@ -178,7 +184,13 @@ public class MainGame implements Screen {
         player.renderShootCooldownBar(spriteBatch);//rysowanie paska shootCooldown
         player.renderPlayerHPBar(spriteBatch);//rysowanie paska hp gracza
         enemyWave.renderEnemyHPBar(spriteBatch);//rysowanie paskow hp przeciwnikow
-
+        //coin
+        coins = enemyWave.getArrayCoins();
+        //rysowanie
+        for (Coin coin : coins) {
+            coin.render(spriteBatch);
+        }
+        //coin-end
         ////////////////////////
         spriteBatch.end();
 
