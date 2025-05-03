@@ -4,10 +4,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 
 public class ShieldBuilding {
     private Sprite sprite;
     private int health;
+    private int maxHealth;
     private boolean destroyed = false;
 
     public ShieldBuilding(float x, float y) {
@@ -16,6 +18,7 @@ public class ShieldBuilding {
         sprite.setPosition(x, y);
         sprite.setSize(1, 1); //rozmiar
         health = 5; //hp budynku (l. trafien)
+        maxHealth = health;
     }
 
     public void render(SpriteBatch batch) {
@@ -43,6 +46,15 @@ public class ShieldBuilding {
 
     public boolean isDestroyed() {
         return destroyed;
+    }
+    private void resetHPBuilding(ShieldBuilding bunker){
+        bunker.health = maxHealth;
+    }
+    public void resetAllBuildingsState(Array<ShieldBuilding> bunkers){
+        for (ShieldBuilding bunker : bunkers){
+            bunker.destroyed=false;
+            bunker.resetHPBuilding(bunker);
+        }
     }
 }
 

@@ -35,8 +35,9 @@ public class MainGame implements Screen {
     //tablica na typy przeciwnikow
     Array<Enemy> EnemyTypes = new Array<>();
 
-    //budynki oslaniajace tablica
+    //budynki oslaniajace
     Array<ShieldBuilding> bunkers;
+    ShieldBuilding bunker;
     //flaga zatrzymania gry
     private boolean isPaused = false;
     private boolean wasPaused = false;
@@ -93,14 +94,15 @@ public class MainGame implements Screen {
         enemyWave.generateNewWave(EnemyTypes, viewport,player);
 
         //budynki osłaniające w tablicy
+        bunker = new ShieldBuilding(0,0);
         bunkers = new Array<>();
-        bunkers.add(new ShieldBuilding(1, 1.5f));
-        bunkers.add(new ShieldBuilding(5, 1.5f));
-        bunkers.add(new ShieldBuilding(9, 1.5f));
-        bunkers.add(new ShieldBuilding(13, 1.5f));
+        bunkers.add(new ShieldBuilding(1, 2f));
+        bunkers.add(new ShieldBuilding(5, 2f));
+        bunkers.add(new ShieldBuilding(9, 2f));
+        bunkers.add(new ShieldBuilding(13, 2f));
 
         //test only
-        //player.activeCheatCode();
+        player.activeCheatCode();
     }
 
     @Override
@@ -164,6 +166,7 @@ public class MainGame implements Screen {
             enemyWave.generateNewWave(EnemyTypes, viewport,player);
             player.resetPlayerPosition();
             player.resetPlayerHP();//wart. pocz. HP
+            bunker.resetAllBuildingsState(bunkers);//resetowanie stanu budynkow
             //test only
             //player.activeCheatCode();
         }
@@ -179,6 +182,7 @@ public class MainGame implements Screen {
                 coins.removeIndex(i);
             }
         }
+        player.checkCollisionWithBuildings(bunkers,hitSound);//sprawdzenie kolizji poc. gracza z budynkami
     }
     public void draw(){
         ScreenUtils.clear(Color.BLACK);
