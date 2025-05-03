@@ -207,6 +207,21 @@ public class EnemyWave {
             }
         }
     }
+    //TODO wykrycie kolizji z budynkami
+    public void checkCollisionWithBuildings(Array<ShieldBuilding> buildings, Sound hitSound) {
+        for (int i = enemyBullets.size - 1; i >= 0; i--) {
+            EnemyBullet bullet = enemyBullets.get(i);
+            // trafienie budynku
+            for (ShieldBuilding building : buildings) {
+                if (!building.isDestroyed() && bullet.getBounds().overlaps(building.getBounds())) {
+                    enemyBullets.removeIndex(i);
+                    building.takeHit();
+                    hitSound.play();//TODO do zmiany dzwiek uderzenia budynku
+                    break;
+                }
+            }
+        }
+    }
     //czyszczenie pociskow ktore zostaly z poprzedniej fali
     private void clearLeftEnemiesBullets(){
         enemyBullets.clear();

@@ -5,6 +5,7 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -34,6 +35,8 @@ public class MainGame implements Screen {
     //tablica na typy przeciwnikow
     Array<Enemy> EnemyTypes = new Array<>();
 
+    //budynki oslaniajace tablica
+    Array<ShieldBuilding> bunkers;
     //flaga zatrzymania gry
     private boolean isPaused = false;
     private boolean wasPaused = false;
@@ -88,6 +91,13 @@ public class MainGame implements Screen {
         //generowanie losowej pierwszej fali
         enemyWave = new EnemyWave(enemyWhite,game);
         enemyWave.generateNewWave(EnemyTypes, viewport,player);
+
+        //budynki osłaniające w tablicy
+        bunkers = new Array<>();
+        bunkers.add(new ShieldBuilding(1, 1.5f));
+        bunkers.add(new ShieldBuilding(5, 1.5f));
+        bunkers.add(new ShieldBuilding(9, 1.5f));
+        bunkers.add(new ShieldBuilding(13, 1.5f));
 
         //test only
         //player.activeCheatCode();
@@ -149,6 +159,7 @@ public class MainGame implements Screen {
         enemyWave.tryShootRandomEnemy(delta);//strzelanie przeciwnikow
         enemyWave.updateEnemyBullets(delta, viewport);//update pociskow przeciwnikow
         enemyWave.checkCollisionWithPlayer(player.getBounds(), hitSound,player);//sprawdzenie kolizji pociskow przeciwnikow z graczem - aktualizacja hp gdy kolizja
+        enemyWave.checkCollisionWithBuildings(bunkers,hitSound);//sprawdzenie kolizji z budynkami
         if(enemyWave.isAnyEnemyLeftOnField()==0){//sprawdzenie czy jest jeszcze jakis przeciwnik na ekranie
             enemyWave.generateNewWave(EnemyTypes, viewport,player);
             player.resetPlayerPosition();
@@ -191,6 +202,10 @@ public class MainGame implements Screen {
             coin.render(spriteBatch);
         }
         //coin-end
+        //budynki oslaniajace
+        for (ShieldBuilding bunker : bunkers) {
+            bunker.render(spriteBatch);
+        }
         ////////////////////////
         spriteBatch.end();
 
