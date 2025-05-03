@@ -95,6 +95,8 @@ public class InGameUI {
         shapeRenderer.dispose();
         batch.dispose();
         stage.dispose();
+        TextureManager.disposeAll();
+        FontManager.disposeAll();
     }
 
 }

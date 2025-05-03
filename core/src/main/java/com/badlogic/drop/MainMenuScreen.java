@@ -37,7 +37,6 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new MainGame(game));
-                dispose();
             }
         });
 
@@ -50,7 +49,6 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new StoreScreen(game));
-                dispose();
             }
 
         });
@@ -90,6 +88,8 @@ public class MainMenuScreen implements Screen {
 
     @Override public void dispose() {
         stage.dispose();
+        TextureManager.disposeAll();
+        FontManager.disposeAll();
     }
 
     // Puste metody z interfejsu Screen

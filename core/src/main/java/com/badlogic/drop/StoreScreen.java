@@ -60,7 +60,6 @@ public class StoreScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new MainMenuScreen(game));
-                dispose();
             }
         });
 
@@ -212,6 +211,8 @@ public class StoreScreen implements Screen {
 
     @Override public void dispose() {
         stage.dispose();
+        TextureManager.disposeAll();
+        FontManager.disposeAll();
     }
 
     @Override public void show() {}

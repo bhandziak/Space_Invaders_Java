@@ -13,18 +13,48 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class PauseScreen {
     final Main game;
+    final MainGame mainGame;
     private final ShapeRenderer shapeRenderer;
     private final SpriteBatch batch;
     private final Stage stage;
 
+    private Label pauseText;
+    private TextButton exitButton;
+
     private final String exitButton_Text = "EXIT";
 
-    public PauseScreen(final Main game){
+    public PauseScreen(final Main game, final MainGame mainGame){
         this.game = game;
+        this.mainGame = mainGame;
         shapeRenderer = new ShapeRenderer();
         batch = new SpriteBatch();
         stage = new Stage(new ScreenViewport());
-        Gdx.input.setInputProcessor(stage); // Ustawiamy stage jako procesor wejścia
+        Gdx.input.setInputProcessor(stage);
+
+        // tekst i przycisk
+        float pauseTextPosX = Gdx.graphics.getWidth() / 2f - 250f;
+        float pauseTextPosY = Gdx.graphics.getHeight() / 2f + 2* UsefullConstans.textSize;
+
+        pauseText = TextFieldFactory.create(
+            "GAME IS PAUSED", UsefullConstans.textSize, pauseTextPosX, pauseTextPosY, Color.GREEN
+        );
+
+        stage.addActor(pauseText);
+
+        float exitButtonPosX = Gdx.graphics.getWidth() / 2f - UsefullConstans.buttonWidth / 2f;
+        float exitButtonPosY = Gdx.graphics.getHeight() / 2f - UsefullConstans.buttonHeight;
+
+        exitButton = TextButtonFactory.create(exitButton_Text, UsefullConstans.textSize, exitButtonPosX , exitButtonPosY, UsefullConstans.buttonWidth, UsefullConstans.buttonHeight);
+
+        exitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.updateHighscore();//aktualizacja highscore
+                game.setScreen(new MainMenuScreen(game));
+            }
+        });
+
+        stage.addActor(exitButton);
     }
 
     // renderowanie nakładki pauzy
@@ -39,32 +69,6 @@ public class PauseScreen {
 
         Gdx.gl.glDisable(GL20.GL_BLEND);
 
-        // tekst i przycisk
-        float pauseTextPosX = Gdx.graphics.getWidth() / 2f - 250f;
-        float pauseTextPosY = Gdx.graphics.getHeight() / 2f + 2* UsefullConstans.textSize;
-
-        Label pauseText = TextFieldFactory.create(
-            "GAME IS PAUSED", UsefullConstans.textSize, pauseTextPosX, pauseTextPosY, Color.GREEN
-        );
-
-        stage.addActor(pauseText);
-
-        float exitButtonPosX = Gdx.graphics.getWidth() / 2f - UsefullConstans.buttonWidth / 2f;
-        float exitButtonPosY = Gdx.graphics.getHeight() / 2f - UsefullConstans.buttonHeight;
-
-        TextButton exitButton = TextButtonFactory.create(exitButton_Text, UsefullConstans.textSize, exitButtonPosX , exitButtonPosY, UsefullConstans.buttonWidth, UsefullConstans.buttonHeight);
-
-        exitButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.updateHighscore();//aktualizacja highscore
-                game.setScreen(new MainMenuScreen(game));
-                dispose();
-            }
-        });
-
-        stage.addActor(exitButton);
-
         // Renderowanie wszystkiego na stage
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f)); // Aktualizacja stage
         stage.draw(); // Rysowanie elementów na stage
@@ -74,6 +78,9 @@ public class PauseScreen {
         shapeRenderer.dispose();
         batch.dispose();
         stage.dispose();
+        TextureManager.disposeAll();
+        FontManager.disposeAll();
+        mainGame.dispose();
     }
     public void show() {
         Gdx.input.setInputProcessor(stage);

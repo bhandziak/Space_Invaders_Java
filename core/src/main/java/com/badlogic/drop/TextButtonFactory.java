@@ -22,11 +22,7 @@ public class TextButtonFactory {
         String buttonText, int fontSize, float xPosition, float yPosition,
         float buttonWidth, float buttonHeight, Color defaultColor ) {
         // Font generation
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font_retro_gaming.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = fontSize;
-        BitmapFont buttonFont = generator.generateFont(parameter);
-        generator.dispose();
+        BitmapFont buttonFont = FontManager.get(fontSize);
 
         // Button style
         TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();

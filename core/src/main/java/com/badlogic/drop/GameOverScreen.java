@@ -11,11 +11,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import static java.lang.Math.log10;
+
 public class GameOverScreen {
     final Main game;
     private final ShapeRenderer shapeRenderer;
     private final SpriteBatch batch;
     private final Stage stage;
+
+    private Label pauseText;
+    private Label scoreText;
+    private TextButton exitButton;
 
     private final String exitButton_Text = "EXIT";
 
@@ -24,7 +30,38 @@ public class GameOverScreen {
         shapeRenderer = new ShapeRenderer();
         batch = new SpriteBatch();
         stage = new Stage(new ScreenViewport());
-        Gdx.input.setInputProcessor(stage); // Ustawiamy stage jako procesor wejścia
+        Gdx.input.setInputProcessor(stage);
+
+        // tekst i przycisk
+        float pauseTextPosX = Gdx.graphics.getWidth() / 2f - 170f;
+        float pauseTextPosY = Gdx.graphics.getHeight() / 2f + 2* UsefullConstans.textSize;
+
+        pauseText = TextFieldFactory.create(
+            "GAME OVER", UsefullConstans.textSize, pauseTextPosX, pauseTextPosY, Color.GREEN
+        );
+
+        stage.addActor(pauseText);
+
+        float scoreTextPosX = Gdx.graphics.getWidth() / 2f - 125f - UsefullConstans.textSize * String.valueOf(game.score).length();
+        float scoreTextPosY = Gdx.graphics.getHeight() / 2f + UsefullConstans.textSize - 20f;
+        scoreText = TextFieldFactory.create(
+            "score: ".concat(String.valueOf(game.score)), UsefullConstans.textSize, scoreTextPosX, scoreTextPosY, Color.WHITE
+        );
+        stage.addActor(scoreText);
+
+        float exitButtonPosX = Gdx.graphics.getWidth() / 2f - UsefullConstans.buttonWidth / 2f;
+        float exitButtonPosY = Gdx.graphics.getHeight() / 2f - UsefullConstans.buttonHeight;
+
+        exitButton = TextButtonFactory.create(exitButton_Text, UsefullConstans.textSize, exitButtonPosX , exitButtonPosY, UsefullConstans.buttonWidth, UsefullConstans.buttonHeight);
+
+        exitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new MainMenuScreen(game));
+            }
+        });
+
+        stage.addActor(exitButton);
     }
 
     // renderowanie nakładki game over
@@ -33,44 +70,13 @@ public class GameOverScreen {
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(0, 0, 0, 0.5f); // Półprzeźroczysty czarny
+        shapeRenderer.setColor(0, 0, 0, 0.5f); // tło
         shapeRenderer.rect(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         shapeRenderer.end();
 
         Gdx.gl.glDisable(GL20.GL_BLEND);
 
-        // tekst i przycisk
-        float pauseTextPosX = Gdx.graphics.getWidth() / 2f - 170f;
-        float pauseTextPosY = Gdx.graphics.getHeight() / 2f + 2* UsefullConstans.textSize;
-
-        Label pauseText = TextFieldFactory.create(
-            "GAME OVER", UsefullConstans.textSize, pauseTextPosX, pauseTextPosY, Color.GREEN
-        );
-
-        stage.addActor(pauseText);
-        float scoreTextPosX = Gdx.graphics.getWidth() / 2f - 125f;
-        float scoreTextPosY = Gdx.graphics.getHeight() / 2f + UsefullConstans.textSize - 20f;
-        Label scoreText = TextFieldFactory.create(
-            "score: ".concat(String.valueOf(game.score)), UsefullConstans.textSize, scoreTextPosX, scoreTextPosY, Color.WHITE
-        );
-
-
-        stage.addActor(scoreText);
-
-        float exitButtonPosX = Gdx.graphics.getWidth() / 2f - UsefullConstans.buttonWidth / 2f;
-        float exitButtonPosY = Gdx.graphics.getHeight() / 2f - UsefullConstans.buttonHeight;
-
-        TextButton exitButton = TextButtonFactory.create(exitButton_Text, UsefullConstans.textSize, exitButtonPosX , exitButtonPosY, UsefullConstans.buttonWidth, UsefullConstans.buttonHeight);
-
-        exitButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new MainMenuScreen(game));
-                dispose();
-            }
-        });
-
-        stage.addActor(exitButton);
+        scoreText.setText("score: ".concat(String.valueOf(game.score)));
 
         // Renderowanie wszystkiego na stage
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f)); // Aktualizacja stage
@@ -81,5 +87,7 @@ public class GameOverScreen {
         shapeRenderer.dispose();
         batch.dispose();
         stage.dispose();
+        TextureManager.disposeAll();
+        FontManager.disposeAll();
     }
 }

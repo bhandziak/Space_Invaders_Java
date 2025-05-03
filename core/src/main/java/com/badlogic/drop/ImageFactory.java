@@ -9,7 +9,7 @@ public class ImageFactory {
         String fileName, float xPosition, float yPosition,
         float width, float height){
 
-        Texture texture = new Texture(Gdx.files.internal(fileName));
+        Texture texture = TextureManager.get(fileName);
         Image image = new Image(texture);
 
         image.setSize(width, height);

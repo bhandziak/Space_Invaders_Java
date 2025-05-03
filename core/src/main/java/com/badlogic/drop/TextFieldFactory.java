@@ -14,12 +14,7 @@ public class TextFieldFactory {
         float xPosition, float yPosition,
         Color color
     ) {
-        // Font generation
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font_retro_gaming.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = fontSize;
-        BitmapFont font = generator.generateFont(parameter);
-        generator.dispose();
+        BitmapFont font = FontManager.get(fontSize);
 
         // Label style
         LabelStyle style = new LabelStyle();

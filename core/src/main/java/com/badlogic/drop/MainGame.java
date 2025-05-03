@@ -50,7 +50,7 @@ public class MainGame implements Screen {
     public MainGame(Main game) {
         this.game = game;
         game.score = 0;
-        pauseScreen = new PauseScreen(game);
+        pauseScreen = new PauseScreen(game, this);
         //ingame UI
         inGameUI = new InGameUI(game);
         gameOverScreen = new GameOverScreen(game);
@@ -238,6 +238,8 @@ public class MainGame implements Screen {
         pauseScreen.dispose();
         inGameUI.dispose();
         gameOverScreen.dispose();
+        TextureManager.disposeAll();
+        FontManager.disposeAll();
     }
 
 }
