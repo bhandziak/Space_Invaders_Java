@@ -15,7 +15,6 @@ public class EnemyWave {
     private Enemy enemyTemplate;
     private Array<Enemy> enemies;
 
-
     //odpowiada za ruch przeciwnikow
     private float moveTimer = 0f;
     private float moveInterval = 1f; //move delay
@@ -34,10 +33,17 @@ public class EnemyWave {
     //tekstury dla paska HP wrogow
     Texture barFillTexture = new Texture("progressBar_green.png");
 
+    //potrzebne do zmiany Score
+    final Main game;
     public Array<EnemyBullet> enemyBullets = new Array<>();
+
+    //Coin
+    private float dropCoinRate = .3f;//szansa na drop monety
+    Array<Coin> coins = new Array<>();
     ////////////////////////
 
-    public EnemyWave(Enemy enemyTemplate) {
+    public EnemyWave(Enemy enemyTemplate, final Main game) {
+        this.game = game;
         this.enemyTemplate = enemyTemplate;
         this.enemies = new Array<>();
         this.moveDownStep = enemyTemplate.sprite.getHeight();//przesuniecie o wysokość przeciwnika
@@ -55,6 +61,7 @@ public class EnemyWave {
         float enemyHP = enemyTemplate.EnemyHP;
         float enemyBulletDamage = enemyTemplate.EnemyBulletDamage;
         float bulletSpeed = enemyTemplate.EnemyBulletSpeed;
+        int scorePoints = enemyTemplate.ScorePoints;
 
         // Wysokość ekranu, aby ustawić przeciwników na odpowiedniej wysokości
         float worldHeight = viewport.getWorldHeight();
@@ -68,12 +75,13 @@ public class EnemyWave {
 
         for (int i = 0; i < amount; i++) {
             float x = startX + i * (width + spacing);
-            Enemy newEnemy = new Enemy(texture, x, y, width, height,enemyHP,enemyBulletDamage,bulletSpeed);
+            Enemy newEnemy = new Enemy(texture, x, y, width, height,enemyHP,enemyBulletDamage,bulletSpeed,scorePoints);
             enemies.add(newEnemy);
         }
     }
     public void addRow(Viewport viewport, int amount, int row, Enemy enemyTemplate) {
         float spacing = 0.25f;
+
         // Szerokość ekranu (do wycentrowania)
         float worldWidth = viewport.getWorldWidth();
 
@@ -84,10 +92,13 @@ public class EnemyWave {
         float enemyHP = enemyTemplate.EnemyHP;
         float enemyBulletDamage = enemyTemplate.EnemyBulletDamage;
         float bulletSpeed = enemyTemplate.EnemyBulletSpeed;
+        int scorePoints = enemyTemplate.ScorePoints;
 
+        //offset od gory ekranu
+        float offset = 0.6f;
         // Wysokość ekranu, aby ustawić przeciwników na odpowiedniej wysokości
         float worldHeight = viewport.getWorldHeight();
-        float y = worldHeight - height - 0.7f * row;
+        float y = (worldHeight - height - 0.7f * row) -offset;
 
         // Całkowita szerokość fali przeciwników
         float totalWidth = amount * width + (amount - 1) * spacing;
@@ -98,7 +109,7 @@ public class EnemyWave {
 
         for (int i = 0; i < amount; i++) {
             float x = startX + i * (width + spacing);
-            Enemy enemy = new Enemy(texture, x, y, width, height,enemyHP,enemyBulletDamage,bulletSpeed);
+            Enemy enemy = new Enemy(texture, x, y, width, height,enemyHP,enemyBulletDamage,bulletSpeed,scorePoints);
             enemies.add(enemy);
         }
     }
@@ -196,6 +207,21 @@ public class EnemyWave {
             }
         }
     }
+    //TODO wykrycie kolizji z budynkami
+    public void checkCollisionWithBuildings(Array<ShieldBuilding> buildings, Sound hitSound) {
+        for (int i = enemyBullets.size - 1; i >= 0; i--) {
+            EnemyBullet bullet = enemyBullets.get(i);
+            // trafienie budynku
+            for (ShieldBuilding building : buildings) {
+                if (!building.isDestroyed() && bullet.getBounds().overlaps(building.getBounds())) {
+                    enemyBullets.removeIndex(i);
+                    building.takeHit();
+                    hitSound.play();//TODO do zmiany dzwiek uderzenia budynku
+                    break;
+                }
+            }
+        }
+    }
     //czyszczenie pociskow ktore zostaly z poprzedniej fali
     private void clearLeftEnemiesBullets(){
         enemyBullets.clear();
@@ -238,7 +264,13 @@ public class EnemyWave {
             batch.draw(barFillTexture, barX, barY, fillWidth, barHeight);
         }
     }
-
+    //Funkcja do liczenia szansy na drop monety
+    public boolean chanceForCoinDrop() {
+        return MathUtils.random() < dropCoinRate;
+    }
+    public Array<Coin> getArrayCoins(){
+        return coins;
+    }
 
     public void update(float delta, Viewport viewport, Array<PlayerBullet> bullets) {
         for (int i = enemies.size - 1; i >= 0; i--) {
@@ -255,7 +287,16 @@ public class EnemyWave {
                     enemies.get(i).EnemyTakeHit(bullet.getBulletDamage());
                     System.out.println("Przeciwnik otrzymal "+bullet.getBulletDamage()+" obrazen, teraz posiada "+enemies.get(i).getEnemyHP()+" HP");//debug note
                     //TODO tutaj dodac dzwiek otrzymania obrazen przez przeciwnika
+                    //Zabicie przeciwnika przez gracza
                     if(enemies.get(i).isEnemyAlive()==0){
+                        game.score += enemies.get(i).ScorePoints;//update score
+                        //szansa na drop monety przez przeciwnika
+                        if(chanceForCoinDrop()){
+                            game.money += 5;
+                            Coin coin = new Coin(enemies.get(i).sprite.getX(),enemies.get(i).sprite.getY());
+                            coins.add(coin);
+                            coin.playSound();
+                        }
                         enemies.removeIndex(i);
                         enemy.killSound.play();
                     }

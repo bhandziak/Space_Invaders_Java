@@ -5,6 +5,7 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -17,7 +18,6 @@ public class MainGame implements Screen {
 
     SpriteBatch spriteBatch;
     FitViewport viewport;
-
     //Player
     Player player;
     Sound hitSound;//dziwiek otrzymania obrazen
@@ -27,30 +27,38 @@ public class MainGame implements Screen {
     Texture enemyGreenTexture;
     Enemy enemyWhite;//5hp   2dmg
     Enemy enemyGreen;//10hp  3dmg
-
+    //coin
+    Array<Coin> coins = new Array<>();
     //Wave - fala przeciwnikow
     EnemyWave enemyWave;
 
     //tablica na typy przeciwnikow
     Array<Enemy> EnemyTypes = new Array<>();
 
+    //budynki oslaniajace
+    Array<ShieldBuilding> bunkers;
+    ShieldBuilding bunker;
     //flaga zatrzymania gry
     private boolean isPaused = false;
     private boolean wasPaused = false;
     private PauseScreen pauseScreen;
+    private InGameUI inGameUI;
     private boolean isGameOver = false;
+    private boolean isGameUIshowed = false;
     private GameOverScreen gameOverScreen;
 
     public MainGame(Main game) {
         this.game = game;
+        game.score = 0;
         pauseScreen = new PauseScreen(game);
+        //ingame UI
+        inGameUI = new InGameUI(game);
         gameOverScreen = new GameOverScreen(game);
         // wszystko z metody create()
         // Prepare your application here.
         spriteBatch = new SpriteBatch();//batch
         //rozmiar ekranu
         viewport = new FitViewport(16, 9);
-
 
         backgroundTexture = new Texture("background_black.png");//tlo
         enemyWhiteTexture = new Texture("enemy_white.png");//tekstura enemy-white
@@ -66,8 +74,8 @@ public class MainGame implements Screen {
         hitSound = Gdx.audio.newSound(Gdx.files.internal("playerDamage.wav"));//dziwiek otrzymania obrazen
 
         //enemy - tutaj mozna dodac nowe typy przeciwnikow
-        enemyWhite = new Enemy(enemyWhiteTexture, 0, 0, .7f, .7f,5f,2f,2.5f);
-        enemyGreen = new Enemy(enemyGreenTexture, 0, 0, .7f, .7f,10f,3f,3.5f);
+        enemyWhite = new Enemy(enemyWhiteTexture, 0, 0, .7f, .7f,5f,2f,2.5f,100);
+        enemyGreen = new Enemy(enemyGreenTexture, 0, 0, .7f, .7f,10f,3f,3.5f,250);
 
         //wave - reczne tworzenie fali - w razie potrzeby
         //enemyWave = new EnemyWave(enemyWhite);
@@ -82,8 +90,16 @@ public class MainGame implements Screen {
         EnemyTypes.add(enemyWhite,enemyGreen);
 
         //generowanie losowej pierwszej fali
-        enemyWave = new EnemyWave(enemyWhite);
+        enemyWave = new EnemyWave(enemyWhite,game);
         enemyWave.generateNewWave(EnemyTypes, viewport,player);
+
+        //budynki osłaniające w tablicy
+        bunker = new ShieldBuilding(0,0);
+        bunkers = new Array<>();
+        bunkers.add(new ShieldBuilding(1, 2f));
+        bunkers.add(new ShieldBuilding(5, 2f));
+        bunkers.add(new ShieldBuilding(9, 2f));
+        bunkers.add(new ShieldBuilding(13, 2f));
 
         //test only
         //player.activeCheatCode();
@@ -103,6 +119,7 @@ public class MainGame implements Screen {
     public void render(float v) {
         // Draw your application here.
         if(isGameOver){
+            inGameUI.hide(); // wyłączenie interfejsu gry (score)
             draw();
             gameOverScreen.render();
         }else{
@@ -110,6 +127,12 @@ public class MainGame implements Screen {
             if(!isPaused) {
                 logic();
                 draw();
+                //ingameUI
+                inGameUI.render();
+                if(!isGameUIshowed){
+                    inGameUI.show();
+                    isGameUIshowed = true;
+                }
                 wasPaused = false;
             }else{
                 if (!wasPaused) {
@@ -138,17 +161,28 @@ public class MainGame implements Screen {
         enemyWave.tryShootRandomEnemy(delta);//strzelanie przeciwnikow
         enemyWave.updateEnemyBullets(delta, viewport);//update pociskow przeciwnikow
         enemyWave.checkCollisionWithPlayer(player.getBounds(), hitSound,player);//sprawdzenie kolizji pociskow przeciwnikow z graczem - aktualizacja hp gdy kolizja
+        enemyWave.checkCollisionWithBuildings(bunkers,hitSound);//sprawdzenie kolizji z budynkami
         if(enemyWave.isAnyEnemyLeftOnField()==0){//sprawdzenie czy jest jeszcze jakis przeciwnik na ekranie
             enemyWave.generateNewWave(EnemyTypes, viewport,player);
             player.resetPlayerPosition();
             player.resetPlayerHP();//wart. pocz. HP
+            bunker.resetAllBuildingsState(bunkers);//resetowanie stanu budynkow
             //test only
             //player.activeCheatCode();
         }
         if(player.isPlayerAlive()==0){
-            //TODO tutaj wywolanie UI z oknem przegranej
+            //wywolanie UI z oknem przegranej
             isGameOver = true;
+            game.updateHighscore();//aktualizacja highscore
         }
+        // Aktualizacja coins
+        for (int i = coins.size - 1; i >= 0; i--) {
+            coins.get(i).update(delta);
+            if (coins.get(i).isFinished()) {
+                coins.removeIndex(i);
+            }
+        }
+        player.checkCollisionWithBuildings(bunkers,hitSound);//sprawdzenie kolizji poc. gracza z budynkami
     }
     public void draw(){
         ScreenUtils.clear(Color.BLACK);
@@ -165,7 +199,17 @@ public class MainGame implements Screen {
         player.renderShootCooldownBar(spriteBatch);//rysowanie paska shootCooldown
         player.renderPlayerHPBar(spriteBatch);//rysowanie paska hp gracza
         enemyWave.renderEnemyHPBar(spriteBatch);//rysowanie paskow hp przeciwnikow
-
+        //coin
+        coins = enemyWave.getArrayCoins();
+        //rysowanie
+        for (Coin coin : coins) {
+            coin.render(spriteBatch);
+        }
+        //coin-end
+        //budynki oslaniajace
+        for (ShieldBuilding bunker : bunkers) {
+            bunker.render(spriteBatch);
+        }
         ////////////////////////
         spriteBatch.end();
 
@@ -192,6 +236,8 @@ public class MainGame implements Screen {
         backgroundTexture.dispose();
         player.dispose();
         pauseScreen.dispose();
+        inGameUI.dispose();
         gameOverScreen.dispose();
     }
+
 }

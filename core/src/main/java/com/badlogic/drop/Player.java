@@ -126,6 +126,18 @@ public class Player {
             bullet.destroy();
         }
     }
+    public void checkCollisionWithBuildings(Array<ShieldBuilding> buildings, Sound hitSound) {
+        for (int i = bullets.size - 1; i >= 0; i--) {
+            for (ShieldBuilding building : buildings) {
+                // trafienie budynku
+                if (!building.isDestroyed() && bullets.get(i).collides(building.getBounds())) {
+                    bullets.removeIndex(i);
+                    hitSound.play();//TODO do zmiany dzwiek uderzenia budynku
+                    break;
+                }
+            }
+        }
+    }
     public Array<PlayerBullet> getBulletsArray(){
         return bullets;
     }
@@ -153,7 +165,7 @@ public class Player {
         sprite.setPosition(playerStartXPosition, playerStartYPosition); // centrowanie na środku
     }
     public void resetPlayerHP(){
-        PlayerHP = 20f;//poczatkowe HP gracza
+        PlayerHP = PlayerMaxHP;//poczatkowe HP gracza
     }
     public void activeCheatCode(){
         PlayerHP = 1000;

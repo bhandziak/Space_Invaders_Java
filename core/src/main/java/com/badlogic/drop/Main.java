@@ -18,4 +18,11 @@ public class Main extends Game {
     public void create() {
         setScreen(new MainMenuScreen(this));
     }
+
+    //aktualizacja highscore
+    public void updateHighscore(){
+        if(recordScore < score){
+            recordScore = score;
+        }
+    }
 }
