@@ -2,12 +2,12 @@ package com.badlogic.drop;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -15,10 +15,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 public class MainMenuScreen implements Screen {
     final Main game;
     private Stage stage;
-    private Texture playButtonTexture, playButtonPressedTexture, playButtonHoverTexture;
-    private Texture shopButtonTexture, shopButtonPressedTexture, shopButtonHoverTexture;
-    private ImageButton playButton;
-    private ImageButton shopButton;
+    private TextButton playButton;
+    private TextButton storeButton;
+
+    private final String playButton_Text = "PLAY";
+    private final String storeButton_Text = "STORE";
+
 
     public MainMenuScreen(final Main game) {
         this.game = game;
@@ -26,84 +28,55 @@ public class MainMenuScreen implements Screen {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
-        // PLAY BUTTON
-        playButtonTexture = new Texture(Gdx.files.internal("play_button.png"));
-        playButtonPressedTexture = new Texture(Gdx.files.internal("play_button_pressed.png"));
-        playButtonHoverTexture = new Texture(Gdx.files.internal("play_button_hover.png"));
+        float playButtonPosX = Gdx.graphics.getWidth() / 2f - UsefullConstans.buttonWidth / 2f;
+        float playButtonPosY = Gdx.graphics.getHeight() / 2f - UsefullConstans.buttonHeight / 2f;
 
-        TextureRegionDrawable up = new TextureRegionDrawable(playButtonTexture);
-        TextureRegionDrawable down = new TextureRegionDrawable(playButtonPressedTexture);
-        TextureRegionDrawable over = new TextureRegionDrawable(playButtonHoverTexture);
+        playButton = TextButtonFactory.create(playButton_Text, UsefullConstans.textSize, playButtonPosX, playButtonPosY, UsefullConstans.buttonWidth, UsefullConstans.buttonHeight);
 
-        ImageButton.ImageButtonStyle buttonStyle = new ImageButton.ImageButtonStyle();
-        buttonStyle.up = up;
-        buttonStyle.down = down;
-        buttonStyle.over = over;
-        playButton = new ImageButton(buttonStyle);
-
-        playButton.setSize(250, 80);
-        playButton.setPosition(
-            Gdx.graphics.getWidth() / 2f - playButton.getWidth() / 2f,
-            Gdx.graphics.getHeight() / 2f - playButton.getHeight() / 2f
-        );
-
-        // Co się stanie po kliknięciu
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new MainGame(game));
                 dispose();
             }
-
         });
 
-        // SHOP BUTTON
+        float storeButtonPosX = Gdx.graphics.getWidth() / 2f - UsefullConstans.buttonWidth / 2f;
+        float storeButtonPosY = Gdx.graphics.getHeight() / 2f - 1.8f* UsefullConstans.buttonHeight;
 
-        shopButtonTexture = new Texture(Gdx.files.internal("shop_button.png"));
-        shopButtonPressedTexture = new Texture(Gdx.files.internal("shop_button_pressed.png"));
-        shopButtonHoverTexture = new Texture(Gdx.files.internal("shop_button_hover.png"));
+        storeButton = TextButtonFactory.create(storeButton_Text, UsefullConstans.textSize, storeButtonPosX, storeButtonPosY, UsefullConstans.buttonWidth, UsefullConstans.buttonHeight);
 
-        TextureRegionDrawable upS = new TextureRegionDrawable(shopButtonTexture);
-        TextureRegionDrawable downS = new TextureRegionDrawable(shopButtonPressedTexture);
-        TextureRegionDrawable overS = new TextureRegionDrawable(shopButtonHoverTexture);
-
-        ImageButton.ImageButtonStyle buttonStyleS = new ImageButton.ImageButtonStyle();
-        buttonStyleS.up = upS;
-        buttonStyleS.down = downS;
-        buttonStyleS.over = overS;
-
-        shopButton = new ImageButton(buttonStyleS);
-
-        shopButton.setSize(250, 80);
-        shopButton.setPosition(
-            Gdx.graphics.getWidth() / 2f -  shopButton.getWidth() / 2f,
-            Gdx.graphics.getHeight() / 2f - 1.8f* shopButton.getHeight()
-        );
-
-        // Co się stanie po kliknięciu
-        shopButton.addListener(new ClickListener() {
+        storeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // przekieruj do ekranu Shop
-                // dispose();
+                game.setScreen(new StoreScreen(game));
+                dispose();
             }
 
         });
 
         stage.addActor(playButton);
-        stage.addActor(shopButton);
+        stage.addActor(storeButton);
+
+        // high score info
+
+        float highScorePosX = storeButtonPosX - 25f;
+        float highScorePosY = storeButtonPosY - UsefullConstans.textSize - 10f;
+
+        Label highScoreText = TextFieldFactory.create(
+            "RECORD SCORE: ".concat(String.valueOf(game.recordScore)), UsefullConstans.textSize2, highScorePosX, highScorePosY, Color.WHITE
+        );
+        stage.addActor(highScoreText);
 
         // LOGO
-        Texture logoTexture = new Texture(Gdx.files.internal("SpaceInvadersLogo.png"));
-        Image logo = new Image(logoTexture);
 
-        logo.setSize(500, 250);
-        logo.setPosition(
-            Gdx.graphics.getWidth() / 2f -  logo.getWidth() / 2f,
-            Gdx.graphics.getHeight() - logo.getHeight()
-        );
+        float logoPosX = Gdx.graphics.getWidth() / 2f -  500f / 2f;
+        float logoPosY = Gdx.graphics.getHeight() - 250f;
+
+        Image logo = ImageFactory.create("SpaceInvadersLogo.png", logoPosX, logoPosY, 500, 250);
 
         stage.addActor(logo);
+
     }
 
     @Override
@@ -117,13 +90,6 @@ public class MainMenuScreen implements Screen {
 
     @Override public void dispose() {
         stage.dispose();
-        playButtonTexture.dispose();
-        playButtonPressedTexture.dispose();
-        playButtonHoverTexture.dispose();
-
-        shopButtonTexture.dispose();
-        shopButtonPressedTexture.dispose();
-        shopButtonHoverTexture.dispose();
     }
 
     // Puste metody z interfejsu Screen

@@ -15,23 +15,26 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class Player {
-    private Texture texture;
-    private Sprite sprite;
-    private Rectangle bounds;
-    private Sound bulletSound;
-    private float speed = 4f;
-    private Array<PlayerBullet> bullets;
-    float PlayerHP;
+    protected Texture texture;
+    protected Sprite sprite;
+    protected Rectangle bounds;
+    protected Sound bulletSound;
+    protected float speed = 4f;
+    protected Array<PlayerBullet> bullets;
+    protected float PlayerHP;
     float PlayerMaxHP;
     float PlayerDamage;
     int playerAlive=1;  //zmienna do sprawdzenia czy player zyje
-    private float shootDelay = 0.8f;//opoznienie strzalu
-    private float shootTimer = 0f;//licznik opoznienia strzalu
+    protected float shootDelay = 0.8f;//opoznienie strzalu
+    protected float shootTimer = 0f;//licznik opoznienia strzalu
     private final float playerStartXPosition = 8-0.5f;
     private final float playerStartYPosition = 0.8f;
     //tekstury
     Texture barFillTexture = new Texture("progressBar_green.png");// textura dla paska shootDelay
     Texture HPBarTexture = new Texture("progressBar_white.png");// textura dla HP gracza
+    // rozmiar pocisku
+    protected float bulletWidth = 0.05f;
+    protected float bulletHeight = 0.3f;
 
     public Player() {
         texture = new Texture("spaceship.png");
@@ -72,7 +75,7 @@ public class Player {
 
             float bulletX = sprite.getX() + sprite.getWidth() / 2f-.05f;
             float bulletY = sprite.getY() + sprite.getHeight();
-            bullets.add(new PlayerBullet(bulletX, bulletY,PlayerDamage));
+            bullets.add(new PlayerBullet(bulletX, bulletY,PlayerDamage, bulletWidth, bulletHeight));
             bulletSound.play();
         }
 

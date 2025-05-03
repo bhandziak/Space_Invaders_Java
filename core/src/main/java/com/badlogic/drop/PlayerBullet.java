@@ -20,11 +20,12 @@ public class PlayerBullet {
     private boolean isAlive = true;
     float PlayerBulletDamage;
 
-    public PlayerBullet(float x, float y,float playerBulletDamage) {
-        bulletTexture = new Texture("drop.png");
+    public PlayerBullet(float x, float y,float playerBulletDamage,
+                        float width, float height) {
+        bulletTexture = new Texture("bullet.png");
 
         bulletSprite = new Sprite(bulletTexture);
-        bulletSprite.setSize(0.05f, 0.3f);
+        bulletSprite.setSize(width, height);
         bulletSprite.setPosition(x, y);
         bulletRectangle = new Rectangle(x, y, bulletSprite.getWidth(), bulletSprite.getHeight());
         PlayerBulletDamage = playerBulletDamage;
