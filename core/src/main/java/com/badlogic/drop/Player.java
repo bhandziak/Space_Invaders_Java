@@ -153,7 +153,7 @@ public class Player {
         sprite.setPosition(playerStartXPosition, playerStartYPosition); // centrowanie na środku
     }
     public void resetPlayerHP(){
-        PlayerHP = 20f;//poczatkowe HP gracza
+        PlayerHP = PlayerMaxHP;//poczatkowe HP gracza
     }
     public void activeCheatCode(){
         PlayerHP = 1000;
