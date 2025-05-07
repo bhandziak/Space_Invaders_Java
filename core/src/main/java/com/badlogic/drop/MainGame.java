@@ -99,7 +99,7 @@ public class MainGame implements Screen {
         bunkers.add(new ShieldBuilding(1, 2f));
         bunkers.add(new ShieldBuilding(5, 2f));
         bunkers.add(new ShieldBuilding(9, 2f));
-        bunkers.add(new ShieldBuilding(13, 2f));
+        bunkers.add(new ShieldBuilding(14, 2f));
 
         //test only
         //player.activeCheatCode();
@@ -199,6 +199,7 @@ public class MainGame implements Screen {
         player.renderShootCooldownBar(spriteBatch);//rysowanie paska shootCooldown
         player.renderPlayerHPBar(spriteBatch);//rysowanie paska hp gracza
         enemyWave.renderEnemyHPBar(spriteBatch);//rysowanie paskow hp przeciwnikow
+        bunker.renderBuildingHPBar(spriteBatch, bunkers);
         //coin
         coins = enemyWave.getArrayCoins();
         //rysowanie

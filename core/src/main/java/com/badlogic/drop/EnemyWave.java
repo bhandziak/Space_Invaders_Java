@@ -207,7 +207,7 @@ public class EnemyWave {
             }
         }
     }
-    //TODO wykrycie kolizji z budynkami
+    //wykrycie kolizji z budynkami
     public void checkCollisionWithBuildings(Array<ShieldBuilding> buildings, Sound hitSound) {
         for (int i = enemyBullets.size - 1; i >= 0; i--) {
             EnemyBullet bullet = enemyBullets.get(i);
