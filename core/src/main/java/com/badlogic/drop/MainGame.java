@@ -49,7 +49,6 @@ public class MainGame implements Screen {
 
     public MainGame(Main game) {
         this.game = game;
-        game.score = 0;
         pauseScreen = new PauseScreen(game, this);
         //ingame UI
         inGameUI = new InGameUI(game);
@@ -97,9 +96,9 @@ public class MainGame implements Screen {
         bunker = new ShieldBuilding(0,0);
         bunkers = new Array<>();
         bunkers.add(new ShieldBuilding(1, 2f));
-        bunkers.add(new ShieldBuilding(5, 2f));
-        bunkers.add(new ShieldBuilding(9, 2f));
-        bunkers.add(new ShieldBuilding(13, 2f));
+        bunkers.add(new ShieldBuilding(5.33f, 2f));
+        bunkers.add(new ShieldBuilding(9.66f, 2f));
+        bunkers.add(new ShieldBuilding(14, 2f));
 
         //test only
         //player.activeCheatCode();
@@ -199,6 +198,7 @@ public class MainGame implements Screen {
         player.renderShootCooldownBar(spriteBatch);//rysowanie paska shootCooldown
         player.renderPlayerHPBar(spriteBatch);//rysowanie paska hp gracza
         enemyWave.renderEnemyHPBar(spriteBatch);//rysowanie paskow hp przeciwnikow
+        bunker.renderBuildingHPBar(spriteBatch, bunkers);
         //coin
         coins = enemyWave.getArrayCoins();
         //rysowanie

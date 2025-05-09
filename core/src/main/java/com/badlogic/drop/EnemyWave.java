@@ -9,8 +9,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import java.util.ArrayList;
-
 public class EnemyWave {
     private Enemy enemyTemplate;
     private Array<Enemy> enemies;
@@ -31,7 +29,9 @@ public class EnemyWave {
         this.shootInterval = interval;
     }
     //tekstury dla paska HP wrogow
-    Texture barFillTexture = new Texture("progressBar_green.png");
+    Texture barHighTexture = new Texture("progressBar_green.png");
+    Texture barMediumTexture = new Texture("progressBar_orange.png");
+    Texture barLowTexture = new Texture("progressBar_red.png");
 
     //potrzebne do zmiany Score
     final Main game;
@@ -207,7 +207,7 @@ public class EnemyWave {
             }
         }
     }
-    //TODO wykrycie kolizji z budynkami
+    //wykrycie kolizji z budynkami
     public void checkCollisionWithBuildings(Array<ShieldBuilding> buildings, Sound hitSound) {
         for (int i = enemyBullets.size - 1; i >= 0; i--) {
             EnemyBullet bullet = enemyBullets.get(i);
@@ -252,16 +252,32 @@ public class EnemyWave {
         }
     }
 
+
+    // progi zmiany w procentach np. 0.5f to 50%
+    private float mediumThreshold = 0.5f;
+    private float lowThreshold = 0.2f;
+
     public void renderEnemyHPBar(SpriteBatch batch){
         for (Enemy enemy : enemies) {
-            float progress = Math.max(0, Math.min(enemy.getEnemyHP() / enemy.getEnemyMaxHP(), 1f));
+            float hp = enemy.getEnemyHP();
+            float maxHp = enemy.getEnemyMaxHP();
+            float progress = Math.max(0, Math.min(hp / maxHp, 1f));
+            //Wybor tekstury
+            Texture selectedTexture;
+            if (progress > mediumThreshold) {
+                selectedTexture = barHighTexture;
+            } else if (progress > lowThreshold) {
+                selectedTexture = barMediumTexture;
+            } else {
+                selectedTexture = barLowTexture;
+            }
             float barWidth = 0.25f;//szerokosc
             float barHeight = 0.02f;//wysokosc
             float centerX = enemy.getEnemySprite().getX()+ enemy.getEnemySprite().getWidth() / 2f;//srodek sprite'a tekstury przeciwnika
             float barX = centerX - barWidth /2f;//polozenie x
             float barY = enemy.getEnemySprite().getY();//polozenie y
             float fillWidth = Math.min(progress * barWidth, barWidth);
-            batch.draw(barFillTexture, barX, barY, fillWidth, barHeight);
+            batch.draw(selectedTexture, barX, barY, fillWidth, barHeight);
         }
     }
     //Funkcja do liczenia szansy na drop monety

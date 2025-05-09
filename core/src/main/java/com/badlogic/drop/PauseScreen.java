@@ -50,6 +50,8 @@ public class PauseScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.updateHighscore();//aktualizacja highscore
+                //zapisanie danych gry przed wyłączeniem
+                game.saveGame();
                 game.setScreen(new MainMenuScreen(game));
             }
         });
