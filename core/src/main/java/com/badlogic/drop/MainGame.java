@@ -97,8 +97,8 @@ public class MainGame implements Screen {
         bunker = new ShieldBuilding(0,0);
         bunkers = new Array<>();
         bunkers.add(new ShieldBuilding(1, 2f));
-        bunkers.add(new ShieldBuilding(5, 2f));
-        bunkers.add(new ShieldBuilding(9, 2f));
+        bunkers.add(new ShieldBuilding(5.33f, 2f));
+        bunkers.add(new ShieldBuilding(9.66f, 2f));
         bunkers.add(new ShieldBuilding(14, 2f));
 
         //test only
