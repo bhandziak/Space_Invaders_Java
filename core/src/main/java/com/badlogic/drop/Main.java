@@ -18,6 +18,8 @@ public class Main extends Game {
     public int recordScore = 0;
     @Override
     public void create() {
+        //wczytanie save z pliku
+        loadGame();
         setScreen(new MainMenuScreen(this));
     }
 
@@ -35,7 +37,6 @@ public class Main extends Game {
     }
     public void loadGame() {
         Preferences prefs = Gdx.app.getPreferences("Save");
-
         //wczytanie danych
         recordScore = prefs.getInteger("score", 0); // 0 - domyślna wartość, gdy nie ma save
         money = prefs.getInteger("money", 0);

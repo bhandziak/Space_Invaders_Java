@@ -49,9 +49,6 @@ public class MainGame implements Screen {
 
     public MainGame(Main game) {
         this.game = game;
-        game.score = 0;
-        //wczytanie save z pliku
-        game.loadGame();
         pauseScreen = new PauseScreen(game, this);
         //ingame UI
         inGameUI = new InGameUI(game);
@@ -235,9 +232,6 @@ public class MainGame implements Screen {
     @Override
     public void dispose() {
         // Destroy application's resources here.
-        //zapisanie danych gry przed wyłączeniem
-        game.saveGame();
-
         spriteBatch.dispose();
         backgroundTexture.dispose();
         player.dispose();
