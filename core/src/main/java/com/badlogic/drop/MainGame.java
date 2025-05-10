@@ -26,8 +26,10 @@ public class MainGame implements Screen {
     //Enemy
     Texture enemyWhiteTexture;
     Texture enemyGreenTexture;
-    Enemy enemyWhite;//5hp   2dmg
-    Enemy enemyGreen;//10hp  3dmg
+    Texture enemyRedTexture;
+    Enemy enemyWhite;
+    Enemy enemyGreen;
+    Enemy enemyRed;
     //coin
     Array<Coin> coins = new Array<>();
     //Wave - fala przeciwnikow
@@ -65,6 +67,7 @@ public class MainGame implements Screen {
         backgroundTexture = new Texture("background_black.png");//tlo
         enemyWhiteTexture = new Texture("enemy_white.png");//tekstura enemy-white
         enemyGreenTexture = new Texture("enemy_green.png");//tekstura enemy-green
+        enemyRedTexture = new Texture("enemy_red.png");//tekstura enemy-red (najciezszy przeciwnik)
         //player
         if(game.selectedSpaceShip == null){
             player = new Player();
@@ -88,6 +91,8 @@ public class MainGame implements Screen {
         //enemy - tutaj mozna dodac nowe typy przeciwnikow
         enemyWhite = new Enemy(enemyWhiteTexture, 0, 0, .7f, .7f,5f,2f,2.5f,100);
         enemyGreen = new Enemy(enemyGreenTexture, 0, 0, .7f, .7f,10f,3f,3.5f,250);
+        enemyRed = new Enemy(enemyRedTexture, 0, 0, .7f, .7f,15f,5f,3.0f,350);
+
 
         //wave - reczne tworzenie fali - w razie potrzeby
         //enemyWave = new EnemyWave(enemyWhite);
@@ -99,7 +104,7 @@ public class MainGame implements Screen {
         //enemyWave.spawnWave(viewport, 12, 1);
 
         //zapisanie typow przeciwnikow do tablicy (potrzebne do tworzenia nowych fal przeciwnikow)
-        EnemyTypes.add(enemyWhite,enemyGreen);
+        EnemyTypes.add(enemyWhite,enemyGreen, enemyRed);
 
         //generowanie losowej pierwszej fali
         enemyWave = new EnemyWave(enemyWhite,game);
@@ -114,7 +119,7 @@ public class MainGame implements Screen {
         bunkers.add(new ShieldBuilding(14, 2f));
 
         //test only
-        player.activeCheatCode();
+        //player.activeCheatCode();
     }
 
     @Override
