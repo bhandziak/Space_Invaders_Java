@@ -216,7 +216,7 @@ public class EnemyWave {
                 if (!building.isDestroyed() && bullet.getBounds().overlaps(building.getBounds())) {
                     enemyBullets.removeIndex(i);
                     building.takeHit();
-                    hitSound.play();//TODO do zmiany dzwiek uderzenia budynku
+                    hitSound.play();
                     break;
                 }
             }

@@ -1,4 +1,5 @@
 package com.badlogic.drop;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -24,6 +25,8 @@ public class GameOverScreen {
     private TextButton exitButton;
 
     private final String exitButton_Text = "EXIT";
+    private Sound gameOverSound;
+    private Sound clickSound;
 
     GameOverScreen(final Main game){
         this.game = game;
@@ -31,6 +34,9 @@ public class GameOverScreen {
         batch = new SpriteBatch();
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
+
+        gameOverSound = Gdx.audio.newSound(Gdx.files.internal("gameOverSound.wav"));
+        clickSound = Gdx.audio.newSound(Gdx.files.internal("selectSound.wav"));
 
         // tekst i przycisk
         float pauseTextPosX = Gdx.graphics.getWidth() / 2f - 170f;
@@ -61,6 +67,7 @@ public class GameOverScreen {
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                clickSound.play();
                 game.selectedSpaceShip = null;
                 game.updateHighscore();//aktualizacja highscore
                 //zapisanie danych gry przed wyłączeniem
@@ -91,11 +98,17 @@ public class GameOverScreen {
         stage.draw(); // Rysowanie elementów na stage
     }
 
+    public void playGameOverSound(){
+        gameOverSound.play();
+    }
+
     public void dispose() {
         shapeRenderer.dispose();
         batch.dispose();
         stage.dispose();
         TextureManager.disposeAll();
         FontManager.disposeAll();
+        gameOverSound.dispose();
+        clickSound.dispose();
     }
 }

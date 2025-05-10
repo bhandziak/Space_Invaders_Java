@@ -132,7 +132,7 @@ public class Player {
                 // trafienie budynku
                 if (!building.isDestroyed() && bullets.get(i).collides(building.getBounds())) {
                     bullets.removeIndex(i);
-                    hitSound.play();//TODO do zmiany dzwiek uderzenia budynku
+                    hitSound.play();
                     break;
                 }
             }

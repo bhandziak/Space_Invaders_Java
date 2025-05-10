@@ -1,4 +1,5 @@
 package com.badlogic.drop;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -23,6 +24,8 @@ public class PauseScreen {
 
     private final String exitButton_Text = "EXIT";
 
+    private Sound clickSound;
+
     public PauseScreen(final Main game, final MainGame mainGame){
         this.game = game;
         this.mainGame = mainGame;
@@ -30,6 +33,8 @@ public class PauseScreen {
         batch = new SpriteBatch();
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
+
+        clickSound = Gdx.audio.newSound(Gdx.files.internal("selectSound.wav"));
 
         // tekst i przycisk
         float pauseTextPosX = Gdx.graphics.getWidth() / 2f - 250f;
@@ -49,6 +54,7 @@ public class PauseScreen {
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                clickSound.play();
                 game.updateHighscore();//aktualizacja highscore
                 //zapisanie danych gry przed wyłączeniem
                 game.saveGame();
@@ -83,6 +89,7 @@ public class PauseScreen {
         TextureManager.disposeAll();
         FontManager.disposeAll();
         mainGame.dispose();
+        clickSound.dispose();
     }
     public void show() {
         Gdx.input.setInputProcessor(stage);

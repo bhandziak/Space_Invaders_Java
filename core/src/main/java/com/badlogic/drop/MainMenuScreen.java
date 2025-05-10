@@ -2,6 +2,7 @@ package com.badlogic.drop;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -21,9 +22,12 @@ public class MainMenuScreen implements Screen {
     private final String playButton_Text = "PLAY";
     private final String storeButton_Text = "STORE";
 
+    private Sound clickSound;
 
     public MainMenuScreen(final Main game) {
         this.game = game;
+
+        clickSound = Gdx.audio.newSound(Gdx.files.internal("selectSound.wav"));
 
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
@@ -36,6 +40,7 @@ public class MainMenuScreen implements Screen {
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                clickSound.play();
                 game.setScreen(new MainGame(game));
             }
         });
@@ -48,6 +53,7 @@ public class MainMenuScreen implements Screen {
         storeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                clickSound.play();
                 game.setScreen(new StoreScreen(game));
             }
 
@@ -107,6 +113,7 @@ public class MainMenuScreen implements Screen {
         stage.dispose();
         TextureManager.disposeAll();
         FontManager.disposeAll();
+        clickSound.dispose();
     }
 
     // Puste metody z interfejsu Screen

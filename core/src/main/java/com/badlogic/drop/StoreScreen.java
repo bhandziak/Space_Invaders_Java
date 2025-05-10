@@ -2,6 +2,7 @@ package com.badlogic.drop;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -31,7 +32,8 @@ public class StoreScreen implements Screen {
     private final String goBackButton_Text = "GO BACK";
     private final String storeTitle_Text = "Welcome to the store!";
 
-
+    private Sound clickSound;
+    private Sound blockedClickSound;
 
     private final int[] spaceships_price = {
       0, 150, 300
@@ -42,6 +44,8 @@ public class StoreScreen implements Screen {
 
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
+        clickSound = Gdx.audio.newSound(Gdx.files.internal("selectSound.wav"));
+        blockedClickSound = Gdx.audio.newSound(Gdx.files.internal("blockedSelectSound.wav"));
 
         loadContent();
     }
@@ -59,6 +63,7 @@ public class StoreScreen implements Screen {
         goBackButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                clickSound.play();
                 game.updateHighscore();//aktualizacja highscore
                 //zapisanie danych gry przed wyłączeniem
                 game.saveGame();
@@ -151,11 +156,13 @@ public class StoreScreen implements Screen {
                     public void clicked(InputEvent event, float x, float y) {
                         // buy spaceship
                         if(spaceships_price[finalI] <= game.money){
+                            clickSound.play();
                             System.out.println("Buy spaceship nr. ".concat(String.valueOf(finalI)));
                             game.bought_spaceship[finalI] = true;
                             game.money -= spaceships_price[finalI];
                             loadContent();
                         }else{
+                            blockedClickSound.play();
                             System.out.println("Not enough money!");
                         }
 
@@ -175,6 +182,7 @@ public class StoreScreen implements Screen {
                     System.out.println("Select spaceship nr. ".concat(String.valueOf(finalI)));
 
                     if(game.bought_spaceship[finalI]){
+                        clickSound.play();
                         switch (finalI) {
                             case 0:
                                 game.selectedSpaceShip = new SpaceShip_Starlink();
@@ -190,6 +198,7 @@ public class StoreScreen implements Screen {
                         }
                         game.selectedSpaceShipId = finalI;
                     }else{
+                        blockedClickSound.play();
                         System.out.println("Statek musi byc najpierw kupiony!");
                     }
 
@@ -216,6 +225,8 @@ public class StoreScreen implements Screen {
         stage.dispose();
         TextureManager.disposeAll();
         FontManager.disposeAll();
+        clickSound.dispose();
+        blockedClickSound.dispose();
     }
 
     @Override public void show() {}

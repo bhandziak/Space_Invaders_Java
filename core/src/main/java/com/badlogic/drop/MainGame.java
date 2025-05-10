@@ -5,7 +5,6 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -20,7 +19,9 @@ public class MainGame implements Screen {
     FitViewport viewport;
     //Player
     Player player;
-    Sound hitSound;//dziwiek otrzymania obrazen
+    Sound hitSound;//dzwiek otrzymania obrazen
+    Sound damageBuildingSound; //dzwiek niszczenia budynku
+    Sound hitBuildingSound;
 
     //Enemy
     Texture enemyWhiteTexture;
@@ -45,7 +46,10 @@ public class MainGame implements Screen {
     private InGameUI inGameUI;
     private boolean isGameOver = false;
     private boolean isGameUIshowed = false;
+
     private GameOverScreen gameOverScreen;
+    private boolean hasPlayedGameOverSound = false;
+
 
     public MainGame(Main game) {
         this.game = game;
@@ -74,9 +78,12 @@ public class MainGame implements Screen {
         isGameUIshowed = false;
         isPaused = false;
         wasPaused = false;
+        hasPlayedGameOverSound = false;
 
 
         hitSound = Gdx.audio.newSound(Gdx.files.internal("playerDamage.wav"));//dziwiek otrzymania obrazen
+        damageBuildingSound = Gdx.audio.newSound(Gdx.files.internal("buildingDamage.wav"));
+        hitBuildingSound =Gdx.audio.newSound(Gdx.files.internal("buildingHit.wav"));
 
         //enemy - tutaj mozna dodac nowe typy przeciwnikow
         enemyWhite = new Enemy(enemyWhiteTexture, 0, 0, .7f, .7f,5f,2f,2.5f,100);
@@ -127,6 +134,11 @@ public class MainGame implements Screen {
             inGameUI.hide(); // wyłączenie interfejsu gry (score)
             draw();
             gameOverScreen.render();
+
+            if (!hasPlayedGameOverSound) {
+                hasPlayedGameOverSound = true;
+                gameOverScreen.playGameOverSound();
+            }
         }else{
             input();
             if(!isPaused) {
@@ -166,7 +178,7 @@ public class MainGame implements Screen {
         enemyWave.tryShootRandomEnemy(delta);//strzelanie przeciwnikow
         enemyWave.updateEnemyBullets(delta, viewport);//update pociskow przeciwnikow
         enemyWave.checkCollisionWithPlayer(player.getBounds(), hitSound,player);//sprawdzenie kolizji pociskow przeciwnikow z graczem - aktualizacja hp gdy kolizja
-        enemyWave.checkCollisionWithBuildings(bunkers,hitSound);//sprawdzenie kolizji z budynkami
+        enemyWave.checkCollisionWithBuildings(bunkers, damageBuildingSound);//sprawdzenie kolizji z budynkami
         if(enemyWave.isAnyEnemyLeftOnField()==0){//sprawdzenie czy jest jeszcze jakis przeciwnik na ekranie
             enemyWave.generateNewWave(EnemyTypes, viewport,player);
             player.resetPlayerPosition();
@@ -187,7 +199,7 @@ public class MainGame implements Screen {
                 coins.removeIndex(i);
             }
         }
-        player.checkCollisionWithBuildings(bunkers,hitSound);//sprawdzenie kolizji poc. gracza z budynkami
+        player.checkCollisionWithBuildings(bunkers,hitBuildingSound);//sprawdzenie kolizji poc. gracza z budynkami
     }
     public void draw(){
         ScreenUtils.clear(Color.BLACK);
