@@ -33,18 +33,18 @@ public class PauseScreen {
 
         // tekst i przycisk
         float pauseTextPosX = Gdx.graphics.getWidth() / 2f - 250f;
-        float pauseTextPosY = Gdx.graphics.getHeight() / 2f + 2* UsefullConstans.textSize;
+        float pauseTextPosY = Gdx.graphics.getHeight() / 2f + 2* UsefulConstans.textSize;
 
         pauseText = TextFieldFactory.create(
-            "GAME IS PAUSED", UsefullConstans.textSize, pauseTextPosX, pauseTextPosY, Color.GREEN
+            "GAME IS PAUSED", UsefulConstans.textSize, pauseTextPosX, pauseTextPosY, Color.GREEN
         );
 
         stage.addActor(pauseText);
 
-        float exitButtonPosX = Gdx.graphics.getWidth() / 2f - UsefullConstans.buttonWidth / 2f;
-        float exitButtonPosY = Gdx.graphics.getHeight() / 2f - UsefullConstans.buttonHeight;
+        float exitButtonPosX = Gdx.graphics.getWidth() / 2f - UsefulConstans.buttonWidth / 2f;
+        float exitButtonPosY = Gdx.graphics.getHeight() / 2f - UsefulConstans.buttonHeight;
 
-        exitButton = TextButtonFactory.create(exitButton_Text, UsefullConstans.textSize, exitButtonPosX , exitButtonPosY, UsefullConstans.buttonWidth, UsefullConstans.buttonHeight);
+        exitButton = TextButtonFactory.create(exitButton_Text, UsefulConstans.textSize, exitButtonPosX , exitButtonPosY, UsefulConstans.buttonWidth, UsefulConstans.buttonHeight);
 
         exitButton.addListener(new ClickListener() {
             @Override

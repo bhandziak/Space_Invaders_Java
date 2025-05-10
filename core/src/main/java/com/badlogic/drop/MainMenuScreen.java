@@ -28,10 +28,10 @@ public class MainMenuScreen implements Screen {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
-        float playButtonPosX = Gdx.graphics.getWidth() / 2f - UsefullConstans.buttonWidth / 2f;
-        float playButtonPosY = Gdx.graphics.getHeight() / 2f - UsefullConstans.buttonHeight / 2f;
+        float playButtonPosX = Gdx.graphics.getWidth() / 2f - UsefulConstans.buttonWidth / 2f;
+        float playButtonPosY = Gdx.graphics.getHeight() / 2f - UsefulConstans.buttonHeight / 2f;
 
-        playButton = TextButtonFactory.create(playButton_Text, UsefullConstans.textSize, playButtonPosX, playButtonPosY, UsefullConstans.buttonWidth, UsefullConstans.buttonHeight);
+        playButton = TextButtonFactory.create(playButton_Text, UsefulConstans.textSize, playButtonPosX, playButtonPosY, UsefulConstans.buttonWidth, UsefulConstans.buttonHeight);
 
         playButton.addListener(new ClickListener() {
             @Override
@@ -40,10 +40,10 @@ public class MainMenuScreen implements Screen {
             }
         });
 
-        float storeButtonPosX = Gdx.graphics.getWidth() / 2f - UsefullConstans.buttonWidth / 2f;
-        float storeButtonPosY = Gdx.graphics.getHeight() / 2f - 1.8f* UsefullConstans.buttonHeight;
+        float storeButtonPosX = Gdx.graphics.getWidth() / 2f - UsefulConstans.buttonWidth / 2f;
+        float storeButtonPosY = Gdx.graphics.getHeight() / 2f - 1.8f* UsefulConstans.buttonHeight;
 
-        storeButton = TextButtonFactory.create(storeButton_Text, UsefullConstans.textSize, storeButtonPosX, storeButtonPosY, UsefullConstans.buttonWidth, UsefullConstans.buttonHeight);
+        storeButton = TextButtonFactory.create(storeButton_Text, UsefulConstans.textSize, storeButtonPosX, storeButtonPosY, UsefulConstans.buttonWidth, UsefulConstans.buttonHeight);
 
         storeButton.addListener(new ClickListener() {
             @Override
@@ -59,10 +59,10 @@ public class MainMenuScreen implements Screen {
         // high score info
 
         float highScorePosX = storeButtonPosX - 25f;
-        float highScorePosY = storeButtonPosY - UsefullConstans.textSize - 10f;
+        float highScorePosY = storeButtonPosY - UsefulConstans.textSize - 10f;
 
         Label highScoreText = TextFieldFactory.create(
-            "RECORD SCORE: ".concat(String.valueOf(game.recordScore)), UsefullConstans.textSize2, highScorePosX, highScorePosY, Color.WHITE
+            "RECORD SCORE: ".concat(String.valueOf(game.recordScore)), UsefulConstans.textSize2, highScorePosX, highScorePosY, Color.WHITE
         );
         stage.addActor(highScoreText);
 
@@ -75,6 +75,23 @@ public class MainMenuScreen implements Screen {
 
         stage.addActor(logo);
 
+        // load selected spaceship
+        switch (game.selectedSpaceShipId){
+            case 0:
+                game.selectedSpaceShip = new SpaceShip_Starlink();
+                break;
+            case 1:
+                game.selectedSpaceShip = new SpaceShip_TwinFang();
+                break;
+            case 2:
+                game.selectedSpaceShip = new SpaceShip_MeteorLance();
+                break;
+            default:
+                game.selectedSpaceShip = new Player();
+
+        }
+        // reset score
+        game.score = 0;
     }
 
     @Override

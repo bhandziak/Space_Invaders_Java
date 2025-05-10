@@ -51,14 +51,17 @@ public class StoreScreen implements Screen {
 
         // GO BACK button
 
-        float goBackButtonPosX = Gdx.graphics.getWidth() - UsefullConstans.buttonWidth - 20f;
+        float goBackButtonPosX = Gdx.graphics.getWidth() - UsefulConstans.buttonWidth - 20f;
         float goBackButtonPosY = 20f;
 
-        TextButton goBackButton = TextButtonFactory.create(goBackButton_Text, UsefullConstans.textSize, goBackButtonPosX, goBackButtonPosY, UsefullConstans.buttonWidth, UsefullConstans.buttonHeight);
+        TextButton goBackButton = TextButtonFactory.create(goBackButton_Text, UsefulConstans.textSize, goBackButtonPosX, goBackButtonPosY, UsefulConstans.buttonWidth, UsefulConstans.buttonHeight);
 
         goBackButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                game.updateHighscore();//aktualizacja highscore
+                //zapisanie danych gry przed wyłączeniem
+                game.saveGame();
                 game.setScreen(new MainMenuScreen(game));
             }
         });
@@ -66,12 +69,12 @@ public class StoreScreen implements Screen {
         stage.addActor(goBackButton);
 
         Label welcomeText = TextFieldFactory.create(
-            storeTitle_Text, UsefullConstans.textSize2, 10f, Gdx.graphics.getHeight() - UsefullConstans.textSize2 - 10f, Color.GREEN
+            storeTitle_Text, UsefulConstans.textSize2, 10f, Gdx.graphics.getHeight() - UsefulConstans.textSize2 - 10f, Color.GREEN
         );
         stage.addActor(welcomeText);
 
         Label moneyText = TextFieldFactory.create(
-            "MONEY : ".concat(String.valueOf(game.money)), UsefullConstans.textSize, Gdx.graphics.getWidth() - 450f, Gdx.graphics.getHeight() - UsefullConstans.textSize - 10f, Color.GREEN
+            "MONEY : ".concat(String.valueOf(game.money)), UsefulConstans.textSize, Gdx.graphics.getWidth() - 450f, Gdx.graphics.getHeight() - UsefulConstans.textSize - 10f, Color.GREEN
         );
         stage.addActor(moneyText);
 
@@ -88,11 +91,11 @@ public class StoreScreen implements Screen {
         stage.addActor(spaceship_starling);
 
         Label spaceship_starling_text = TextFieldFactory.create(
-            spaceship_starling_name, UsefullConstans.textSize2, namePosX, 525f, Color.GREEN
+            spaceship_starling_name, UsefulConstans.textSize2, namePosX, 525f, Color.GREEN
         );
         stage.addActor(spaceship_starling_text);
         Label spaceship_starling_text2 = TextFieldFactory.create(
-            spaceship_starling_desc , UsefullConstans.textSize3, namePosX, 465f, Color.WHITE
+            spaceship_starling_desc , UsefulConstans.textSize3, namePosX, 465f, Color.WHITE
         );
         stage.addActor(spaceship_starling_text2);
 
@@ -102,11 +105,11 @@ public class StoreScreen implements Screen {
         stage.addActor(spaceship_twin_fang);
 
         Label spaceship_twin_fang_text = TextFieldFactory.create(
-            spaceship_twin_fang_name, UsefullConstans.textSize2, namePosX, 375f, Color.BLUE
+            spaceship_twin_fang_name, UsefulConstans.textSize2, namePosX, 375f, Color.BLUE
         );
         stage.addActor(spaceship_twin_fang_text);
         Label spaceship_twin_fang_text2 = TextFieldFactory.create(
-            spaceship_twin_fang_desc, UsefullConstans.textSize3, namePosX, 315f, Color.WHITE
+            spaceship_twin_fang_desc, UsefulConstans.textSize3, namePosX, 315f, Color.WHITE
         );
         stage.addActor(spaceship_twin_fang_text2);
 
@@ -116,11 +119,11 @@ public class StoreScreen implements Screen {
         stage.addActor(spaceship_meteor_lance);
 
         Label spaceship_meteor_lance_text = TextFieldFactory.create(
-            spaceship_meteor_lance_name, UsefullConstans.textSize2, namePosX, 225f, Color.RED
+            spaceship_meteor_lance_name, UsefulConstans.textSize2, namePosX, 225f, Color.RED
         );
         stage.addActor(spaceship_meteor_lance_text);
         Label spaceship_meteor_lance_text2 = TextFieldFactory.create(
-            spaceship_meteor_lance_desc, UsefullConstans.textSize3, namePosX, 165f, Color.WHITE
+            spaceship_meteor_lance_desc, UsefulConstans.textSize3, namePosX, 165f, Color.WHITE
         );
         stage.addActor(spaceship_meteor_lance_text2);
 
@@ -131,7 +134,7 @@ public class StoreScreen implements Screen {
         for(int i =0; i < 3; i++){
             int finalI = i;
             Label price_text = TextFieldFactory.create(
-                "price: ".concat(String.valueOf(spaceships_price[i])), UsefullConstans.textSize2, pricePosX, pricePosY, Color.YELLOW
+                "price: ".concat(String.valueOf(spaceships_price[i])), UsefulConstans.textSize2, pricePosX, pricePosY, Color.YELLOW
             );
 
             stage.addActor(price_text);
@@ -139,7 +142,7 @@ public class StoreScreen implements Screen {
 
             if(!game.bought_spaceship[i]){
                 TextButton buy_button = TextButtonFactory.create(
-                    "BUY", UsefullConstans.textSize2, buyPosX, pricePosY, 100f, 40f
+                    "BUY", UsefulConstans.textSize2, buyPosX, pricePosY, 100f, 40f
                 );
                 stage.addActor(buy_button);
 
@@ -161,7 +164,7 @@ public class StoreScreen implements Screen {
             }
 
             TextButton select_button = TextButtonFactory.create(
-                "SELECT", UsefullConstans.textSize2, selectPosX, pricePosY, 100f, 40f,
+                "SELECT", UsefulConstans.textSize2, selectPosX, pricePosY, 100f, 40f,
                 game.selectedSpaceShipId == finalI ? Color.BLUE : Color.WHITE
             );
             stage.addActor(select_button);

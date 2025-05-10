@@ -29,4 +29,8 @@ public class TextFieldFactory {
 
         return label;
     }
+
+    public static BitmapFont getFont(int fontSize) {
+        return FontManager.get(fontSize);
+    }
 }

@@ -52,7 +52,6 @@ public class MainGame implements Screen {
         pauseScreen = new PauseScreen(game, this);
         //ingame UI
         inGameUI = new InGameUI(game);
-        gameOverScreen = new GameOverScreen(game);
         // wszystko z metody create()
         // Prepare your application here.
         spriteBatch = new SpriteBatch();//batch
@@ -68,6 +67,13 @@ public class MainGame implements Screen {
         }else{
             player = game.selectedSpaceShip;
         }
+        gameOverScreen = new GameOverScreen(game);
+
+        // reset stanów
+        isGameOver = false;
+        isGameUIshowed = false;
+        isPaused = false;
+        wasPaused = false;
 
 
         hitSound = Gdx.audio.newSound(Gdx.files.internal("playerDamage.wav"));//dziwiek otrzymania obrazen

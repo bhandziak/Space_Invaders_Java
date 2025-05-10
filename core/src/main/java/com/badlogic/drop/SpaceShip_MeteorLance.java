@@ -11,7 +11,7 @@ public class SpaceShip_MeteorLance extends Player {
 
         PlayerDamage = 15f;
         shootDelay = 1.5f;
-        PlayerHP = 60f;
+        PlayerHP = 15f;
         PlayerMaxHP = PlayerHP;
         speed = 2f;
 

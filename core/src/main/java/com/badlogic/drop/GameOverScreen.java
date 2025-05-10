@@ -1,6 +1,8 @@
 package com.badlogic.drop;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -10,8 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
-import static java.lang.Math.log10;
 
 public class GameOverScreen {
     final Main game;
@@ -34,29 +34,37 @@ public class GameOverScreen {
 
         // tekst i przycisk
         float pauseTextPosX = Gdx.graphics.getWidth() / 2f - 170f;
-        float pauseTextPosY = Gdx.graphics.getHeight() / 2f + 2* UsefullConstans.textSize;
+        float pauseTextPosY = Gdx.graphics.getHeight() / 2f + 2* UsefulConstans.textSize;
 
         pauseText = TextFieldFactory.create(
-            "GAME OVER", UsefullConstans.textSize, pauseTextPosX, pauseTextPosY, Color.GREEN
+            "GAME OVER", UsefulConstans.textSize, pauseTextPosX, pauseTextPosY, Color.GREEN
         );
 
         stage.addActor(pauseText);
 
-        float scoreTextPosX = Gdx.graphics.getWidth() / 2f - 125f - UsefullConstans.textSize * String.valueOf(game.score).length();
-        float scoreTextPosY = Gdx.graphics.getHeight() / 2f + UsefullConstans.textSize - 20f;
+        // pobranie szerokości czcionki
+        BitmapFont font = TextFieldFactory.getFont(UsefulConstans.textSize);
+        GlyphLayout layout = new GlyphLayout(font, "score: " + game.score);
+
+        float scoreTextPosX = (Gdx.graphics.getWidth() - layout.width) / 2f - 50f;
+        float scoreTextPosY = Gdx.graphics.getHeight() / 2f + UsefulConstans.textSize - 20f;
         scoreText = TextFieldFactory.create(
-            "score: ".concat(String.valueOf(game.score)), UsefullConstans.textSize, scoreTextPosX, scoreTextPosY, Color.WHITE
+            "score: ".concat(String.valueOf(game.score)), UsefulConstans.textSize, scoreTextPosX, scoreTextPosY, Color.WHITE
         );
         stage.addActor(scoreText);
 
-        float exitButtonPosX = Gdx.graphics.getWidth() / 2f - UsefullConstans.buttonWidth / 2f;
-        float exitButtonPosY = Gdx.graphics.getHeight() / 2f - UsefullConstans.buttonHeight;
+        float exitButtonPosX = Gdx.graphics.getWidth() / 2f - UsefulConstans.buttonWidth / 2f;
+        float exitButtonPosY = Gdx.graphics.getHeight() / 2f - UsefulConstans.buttonHeight;
 
-        exitButton = TextButtonFactory.create(exitButton_Text, UsefullConstans.textSize, exitButtonPosX , exitButtonPosY, UsefullConstans.buttonWidth, UsefullConstans.buttonHeight);
+        exitButton = TextButtonFactory.create(exitButton_Text, UsefulConstans.textSize, exitButtonPosX , exitButtonPosY, UsefulConstans.buttonWidth, UsefulConstans.buttonHeight);
 
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                game.selectedSpaceShip = null;
+                game.updateHighscore();//aktualizacja highscore
+                //zapisanie danych gry przed wyłączeniem
+                game.saveGame();
                 game.setScreen(new MainMenuScreen(game));
             }
         });

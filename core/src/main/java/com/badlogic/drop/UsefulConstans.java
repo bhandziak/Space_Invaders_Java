@@ -1,6 +1,6 @@
 package com.badlogic.drop;
 
-public class UsefullConstans {
+public class UsefulConstans {
     public static final int textSize = 50;
     public static final int textSize2 = 30;
     public static final int textSize3 = 15;

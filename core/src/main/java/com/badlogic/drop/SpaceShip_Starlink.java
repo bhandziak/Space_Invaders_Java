@@ -11,7 +11,7 @@ public class SpaceShip_Starlink extends Player {
 
         PlayerDamage = 6f;
         shootDelay = 0.5f;
-        PlayerHP = 20f;
+        PlayerHP = 10f;
         PlayerMaxHP = PlayerHP;
         speed = 8f;
     }

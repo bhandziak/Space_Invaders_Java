@@ -18,7 +18,7 @@ public class SpaceShip_TwinFang extends Player{
 
         PlayerDamage = 4f;
         shootDelay = 0.4f;
-        PlayerHP = 30f;
+        PlayerHP = 10f;
         PlayerMaxHP = PlayerHP;
         speed = 6f;
     }

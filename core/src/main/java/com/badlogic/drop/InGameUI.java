@@ -34,10 +34,10 @@ public class InGameUI {
         batch = new SpriteBatch();
         stage = new Stage(new ScreenViewport());
         scoreAmountText = TextFieldFactory.create(
-            "0", UsefullConstans.textSize, scoreAmountTextPosX, scoreTextPosY, Color.WHITE
+            "0", UsefulConstans.textSize, scoreAmountTextPosX, scoreTextPosY, Color.WHITE
         );
         moneyAmountText = TextFieldFactory.create(
-            "0", UsefullConstans.textSize, MoneyAmount_offset, scoreTextPosY, Color.WHITE
+            "0", UsefulConstans.textSize, MoneyAmount_offset, scoreTextPosY, Color.WHITE
         );
 
     }
@@ -48,20 +48,20 @@ public class InGameUI {
         //od prawej strony ekranu
         //Score napis
         Label scoreText = TextFieldFactory.create(
-            "SCORE:", UsefullConstans.textSize, scoreTextPosX, scoreTextPosY, Color.WHITE
+            "SCORE:", UsefulConstans.textSize, scoreTextPosX, scoreTextPosY, Color.WHITE
         );
         //Money napis
         Label MoneyText = TextFieldFactory.create(
-            "MONEY:", UsefullConstans.textSize,  20f, scoreTextPosY, Color.WHITE
+            "MONEY:", UsefulConstans.textSize,  20f, scoreTextPosY, Color.WHITE
         );
         //Score - liczba
         // ustawiamy szerokość i justowanie w Label
-        scoreAmountText.setSize(labelWidth, UsefullConstans.textSize + 10);
+        scoreAmountText.setSize(labelWidth, UsefulConstans.textSize + 10);
         scoreAmountText.setAlignment(Align.right);//od prawej strony ekranu align
 
         //Money - liczba
         // ustawiamy szerokość i justowanie w Label
-        scoreAmountText.setSize(labelWidth, UsefullConstans.textSize + 10);
+        scoreAmountText.setSize(labelWidth, UsefulConstans.textSize + 10);
 
         stage.addActor(scoreText);
         stage.addActor(MoneyText);
