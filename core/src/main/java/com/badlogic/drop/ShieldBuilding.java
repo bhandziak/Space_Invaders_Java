@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
 public class ShieldBuilding {
-    private Sprite sprite;
+    private Sprite spriteBuilding;
     private int health;
     private int maxHealth;
     private boolean destroyed = false;
@@ -15,12 +15,14 @@ public class ShieldBuilding {
     protected Array<ShieldBuilding> buildings;
     //tekstury dla paska HP wrogow
     Texture barFillTexture = new Texture("progressBar_green.png");
+    private final int buildingImageSize = 603;
 
     public ShieldBuilding(float x, float y) {
-        Texture texture = new Texture("progressBar_green.png");//TODO tekstura do zmiany
-        sprite = new Sprite(texture);
-        sprite.setPosition(x, y);
-        sprite.setSize(1, 1); //rozmiar
+        Texture texture = new Texture("shieldBuilding.png");
+        spriteBuilding = new Sprite(texture);
+        spriteBuilding.setPosition(x, y);
+        spriteBuilding.setSize(1, 1); //rozmiar
+        spriteBuilding.setRegion(0,0,buildingImageSize,buildingImageSize);
         health = 5; //hp budynku (l. trafien)
         maxHealth = health;
         buildings = new Array<>();
@@ -28,13 +30,18 @@ public class ShieldBuilding {
 
     public void render(SpriteBatch batch) {
         if (!destroyed) {
-            sprite.draw(batch);
+            spriteBuilding.draw(batch);
         }
     }
 
     public void update() {
         if (health <= 0) {
             destroyed = true;
+        }else if(health < 5 && health >= 4){
+        } else if (health < 4 && health >= 3) {
+            spriteBuilding.setRegion(buildingImageSize, 0 , buildingImageSize,buildingImageSize);
+        }else{
+            spriteBuilding.setRegion(2*buildingImageSize, 0 , buildingImageSize,buildingImageSize);
         }
     }
 
@@ -45,11 +52,11 @@ public class ShieldBuilding {
         return maxHealth;
     }
     public Sprite getBuildingSprite(){
-        return sprite;
+        return spriteBuilding;
     }
 
     public Rectangle getBounds() {
-        return sprite.getBoundingRectangle();
+        return spriteBuilding.getBoundingRectangle();
     }
 
     public void takeHit() {
