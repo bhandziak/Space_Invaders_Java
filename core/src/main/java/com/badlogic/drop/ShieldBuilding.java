@@ -70,12 +70,15 @@ public class ShieldBuilding {
         return destroyed;
     }
     private void resetHPBuilding(ShieldBuilding bunker){
+
         bunker.health = maxHealth;
+        spriteBuilding.setRegion(0,0,buildingImageSize,buildingImageSize);
     }
     public void resetAllBuildingsState(Array<ShieldBuilding> bunkers){
         for (ShieldBuilding bunker : bunkers){
             bunker.destroyed=false;
             bunker.resetHPBuilding(bunker);
+            bunker.spriteBuilding.setRegion(0,0,buildingImageSize,buildingImageSize);
         }
     }
 
