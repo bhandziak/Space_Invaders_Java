@@ -89,9 +89,9 @@ public class MainGame implements Screen {
         hitBuildingSound =Gdx.audio.newSound(Gdx.files.internal("buildingHit.wav"));
 
         //enemy - tutaj mozna dodac nowe typy przeciwnikow
-        enemyWhite = new Enemy(enemyWhiteTexture, 0, 0, .7f, .7f,5f,2f,2.5f,100);
-        enemyGreen = new Enemy(enemyGreenTexture, 0, 0, .7f, .7f,10f,3f,3.5f,250);
-        enemyRed = new Enemy(enemyRedTexture, 0, 0, .7f, .7f,15f,5f,3.0f,350);
+        enemyWhite = new Enemy(enemyWhiteTexture, 0, 0, .7f, .7f,5f,2f,2.5f,100,0);
+        enemyGreen = new Enemy(enemyGreenTexture, 0, 0, .7f, .7f,10f,3f,3.5f,250,0);
+        enemyRed = new Enemy(enemyRedTexture, 0, 0, .7f, .7f,15f,5f,3.0f,350,1);
 
 
         //wave - reczne tworzenie fali - w razie potrzeby
@@ -197,7 +197,7 @@ public class MainGame implements Screen {
             //test only
             //player.activeCheatCode();
         }
-        if(player.isPlayerAlive()==0 || enemyWave.enemiesReachedBottom){
+        if(player.isPlayerAlive()==0 || enemyWave.enemiesReachedBottomScreen()){
             //wywolanie UI z oknem przegranej
             isGameOver = true;
             game.updateHighscore();//aktualizacja highscore
