@@ -229,7 +229,9 @@ public class StoreScreen implements Screen {
         blockedClickSound.dispose();
     }
 
-    @Override public void show() {}
+    @Override public void show() {
+        Gdx.input.setInputProcessor(stage);
+    }
     @Override public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
     }

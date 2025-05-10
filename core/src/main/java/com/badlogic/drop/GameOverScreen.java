@@ -79,6 +79,10 @@ public class GameOverScreen {
         stage.addActor(exitButton);
     }
 
+    public void show(){
+        Gdx.input.setInputProcessor(stage);
+    }
+
     // renderowanie nakładki game over
     public void render() {
         Gdx.gl.glEnable(GL20.GL_BLEND);

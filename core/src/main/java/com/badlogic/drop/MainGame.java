@@ -125,6 +125,9 @@ public class MainGame implements Screen {
 
     @Override
     public void show() {
+        if(isGameOver){
+            gameOverScreen.show();
+        }
     }
 
     @Override
@@ -138,6 +141,7 @@ public class MainGame implements Screen {
             if (!hasPlayedGameOverSound) {
                 hasPlayedGameOverSound = true;
                 gameOverScreen.playGameOverSound();
+                this.show();
             }
         }else{
             input();

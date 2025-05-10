@@ -116,13 +116,14 @@ public class MainMenuScreen implements Screen {
         clickSound.dispose();
     }
 
-    // Puste metody z interfejsu Screen
     @Override public void show() {}
     @Override public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
     }
     @Override public void pause() {}
     @Override public void resume() {}
-    @Override public void hide() {}
+    @Override public void hide() {
+        Gdx.input.setInputProcessor(null);
+    }
 
 }
