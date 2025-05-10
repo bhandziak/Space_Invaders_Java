@@ -173,6 +173,10 @@ public class EnemyWave {
         //mieszanie indexow
         availableIndices.shuffle();
 
+        //limit strzalow dla typu przeciwnika 'red'
+        int maxShooterType1 = 3; //max liczba strzalow podczas tury strzalu
+        int shooterType1Count = 0;//licznik
+
         //wybranie pierwszych N przeciwników do strzału
         for (int i = 0; i < Math.min(amountOfShootingEnemies, availableIndices.size); i++) {
             Enemy shooter = enemies.get(availableIndices.get(i));
@@ -184,6 +188,8 @@ public class EnemyWave {
                 bullet.setDirectionAndRotate(0, -1); // w dol
                 enemyBullets.add(bullet);
             }else if (shooter.EnemyType == 1) {
+                if (shooterType1Count >= maxShooterType1) continue; // pominiecie nadmiarowych gdy przekroczono ograniczenie
+                shooterType1Count++; //zwiększenie licznika
                 // Trzy pociski w dół: lewy, środkowy, prawy
                 EnemyBullet bulletLeft = new EnemyBullet(x, y, shooter);
                 bulletLeft.setDirectionAndRotate(-3, -4); // lekko w lewo
