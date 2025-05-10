@@ -229,7 +229,7 @@ public class EnemyWave {
             // trafienie gracza
             if (bullet.getBounds().overlaps(playerBounds)) {
                 player.PlayerTakeHit(enemyBullets.get(i).getEnemyByBullet().getEnemyBulletDamage());
-                System.out.println("Gracz otrzymal "+enemyBullets.get(i).getEnemyByBullet().getEnemyBulletDamage()+" obrazen, teraz posiada "+player.getPlayerHP()+" HP");//debug note
+                //System.out.println("Gracz otrzymal "+enemyBullets.get(i).getEnemyByBullet().getEnemyBulletDamage()+" obrazen, teraz posiada "+player.getPlayerHP()+" HP");//debug note
                 enemyBullets.removeIndex(i);
                 hitSound.play();
             }
@@ -355,7 +355,7 @@ public class EnemyWave {
             for (PlayerBullet bullet : bullets) {
                 if (bullet.collides(bounds)) {
                     enemies.get(i).EnemyTakeHit(bullet.getBulletDamage());
-                    System.out.println("Przeciwnik otrzymal "+bullet.getBulletDamage()+" obrazen, teraz posiada "+enemies.get(i).getEnemyHP()+" HP");//debug note
+                    //("Przeciwnik otrzymal "+bullet.getBulletDamage()+" obrazen, teraz posiada "+enemies.get(i).getEnemyHP()+" HP");//debug note
                     //TODO tutaj dodac dzwiek otrzymania obrazen przez przeciwnika
                     //Zabicie przeciwnika przez gracza
                     if(enemies.get(i).isEnemyAlive()==0){
