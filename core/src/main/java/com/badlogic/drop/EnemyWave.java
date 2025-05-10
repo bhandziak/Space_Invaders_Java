@@ -40,6 +40,10 @@ public class EnemyWave {
     //Coin
     private float dropCoinRate = .3f;//szansa na drop monety
     Array<Coin> coins = new Array<>();
+
+    //Sprawdzenie czy przeciwnicy przemieścili się na sam dół ekranu(zetknięcie z budynkami)
+    boolean enemiesReachedBottom=false;
+
     ////////////////////////
 
     public EnemyWave(Enemy enemyTemplate, final Main game) {
@@ -222,6 +226,24 @@ public class EnemyWave {
             }
         }
     }
+    //TODO wykrycie kolizji wrogow z budynkami (zakonczenie gry przez dojscie przeciwnikow na dol ekranu)
+    public void checkEnemiesSpritesCollisionWithBuildingsAndPlayer(Array<ShieldBuilding> buildings,Player player) {
+        for (int i =  enemies.size - 1; i >= 0; i--) {
+            Enemy enemy = enemies.get(i);
+            // zderzenie przeciwnika z budynkiem i playerem
+            for (ShieldBuilding building : buildings) {
+                if (!building.isDestroyed() && enemy.getBounds().overlaps(building.getBounds()) || enemy.getBounds().overlaps(player.getBounds())) {
+                    enemiesReachedBottom = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    public boolean enemiesReachedBottomScreen(){
+        return enemiesReachedBottom; //true - koniec gry
+    }
+
     //czyszczenie pociskow ktore zostaly z poprzedniej fali
     private void clearLeftEnemiesBullets(){
         enemyBullets.clear();

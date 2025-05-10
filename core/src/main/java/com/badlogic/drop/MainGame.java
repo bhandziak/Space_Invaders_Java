@@ -114,7 +114,7 @@ public class MainGame implements Screen {
         bunkers.add(new ShieldBuilding(14, 2f));
 
         //test only
-        //player.activeCheatCode();
+        player.activeCheatCode();
     }
 
     @Override
@@ -179,6 +179,7 @@ public class MainGame implements Screen {
         enemyWave.updateEnemyBullets(delta, viewport);//update pociskow przeciwnikow
         enemyWave.checkCollisionWithPlayer(player.getBounds(), hitSound,player);//sprawdzenie kolizji pociskow przeciwnikow z graczem - aktualizacja hp gdy kolizja
         enemyWave.checkCollisionWithBuildings(bunkers, damageBuildingSound);//sprawdzenie kolizji z budynkami
+        enemyWave.checkEnemiesSpritesCollisionWithBuildingsAndPlayer(bunkers, player);//sprawdzenie kolizji przeciwnikow z budynkami i graczem (przeciwnicy doszli na dol ekranu - przegrana)
         if(enemyWave.isAnyEnemyLeftOnField()==0){//sprawdzenie czy jest jeszcze jakis przeciwnik na ekranie
             enemyWave.generateNewWave(EnemyTypes, viewport,player);
             player.resetPlayerPosition();
@@ -187,7 +188,7 @@ public class MainGame implements Screen {
             //test only
             //player.activeCheatCode();
         }
-        if(player.isPlayerAlive()==0){
+        if(player.isPlayerAlive()==0 || enemyWave.enemiesReachedBottom){
             //wywolanie UI z oknem przegranej
             isGameOver = true;
             game.updateHighscore();//aktualizacja highscore
