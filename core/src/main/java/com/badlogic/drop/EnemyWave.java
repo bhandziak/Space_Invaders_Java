@@ -273,13 +273,21 @@ public class EnemyWave {
         enemyBullets.clear();
     }
 
+    int maxRedEnemiesAmount = 6;//max liczba przeciwnikow typu 'red' w rzedzie
     //metoda do tworzenia nowej fali po skonczeniu poprzedniej
     public void generateNewWave(Array<Enemy>  enemyTypes, FitViewport viewport,Player player){
         int enemyRows = MathUtils.random(1, 5);
         for(int i=0;i<enemyRows;i++){
             int getEnemyType = MathUtils.random(0,enemyTypes.size-1);
             int enemiesInRow = MathUtils.random(1,12);//12-max rozmiar wiersza wrogow
-            addRow(viewport, enemiesInRow, i, enemyTypes.get(getEnemyType));
+            if(getEnemyType==2){//typ 'red' - ograniczenie rozmiaru rzedu fali przeciwnikow typu 'red'
+                enemiesInRow = MathUtils.random(1,maxRedEnemiesAmount);//maxRedEnemiesAmount-max rozmiar wiersza wrogow
+                addRow(viewport, enemiesInRow, i, enemyTypes.get(getEnemyType));
+            }
+            else{
+                addRow(viewport, enemiesInRow, i, enemyTypes.get(getEnemyType));
+            }
+
         }
         clearLeftEnemiesBullets();
         player.clearLeftPlayerBullets();
