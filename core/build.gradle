@@ -16,3 +16,11 @@ dependencies {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
   }
 }
+
+tasks.register('generateJavadoc', Javadoc) {
+  source = sourceSets.main.allJava
+  classpath += configurations.compileClasspath
+  destinationDir = file("$buildDir/docs/javadoc")
+  failOnError = false // przydatne, jeśli czegoś nie da się przetworzyć
+}
+
