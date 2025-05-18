@@ -13,8 +13,30 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+/**
+ * Ekran sklepu gry, który pozwala graczowi przeglądać i kupować statki kosmiczne.
+ * <p>
+ * Ekran umożliwia graczowi:
+ * <ul>
+ *     <li>Wybranie jednego z trzech statków (Starling, Twin Fang, Meteor Lance).</li>
+ *     <li>Kupienie statku, jeśli nie został jeszcze zakupiony i gracz ma wystarczająco pieniędzy.</li>
+ *     <li>Wybranie już kupionego statku.</li>
+ * </ul>
+ * Ekran zawiera również przycisk "GO BACK", który zapisuje grę i przenosi gracza do menu głównego.
+ *
+ * @see MainMenuScreen
+ * @see Player
+ * @see SpaceShip_Starlink
+ * @see SpaceShip_TwinFang
+ * @see SpaceShip_MeteorLance
+ *
+ * @author Bartłomiej Handziak
+ */
+
 public class StoreScreen implements Screen {
+    /** Referencja do głównej klasy {@link Main} umożliwia dostęp do zmiennych globalnych*/
     final Main game;
+    /** Scena stage do obsługi elementów UI */
     private Stage stage;
 
     private final String spaceship_starling_filename = "spaceship_starling.png";
@@ -32,13 +54,21 @@ public class StoreScreen implements Screen {
     private final String goBackButton_Text = "GO BACK";
     private final String storeTitle_Text = "Welcome to the store!";
 
+    /** Dźwięk kliknięcia w przycisk */
     private Sound clickSound;
+    /** Dźwięk kliknięcia w zablokowany przycisk */
     private Sound blockedClickSound;
 
+    /** Tablica cen statków. */
     private final int[] spaceships_price = {
       0, 150, 300
     };
 
+    /**
+     * Tworzy nową instancję ekranu Store.
+     *
+     * @param game instancja głównej klasy gry
+     */
     public StoreScreen(final Main game){
         this.game = game;
 
@@ -50,6 +80,9 @@ public class StoreScreen implements Screen {
         loadContent();
     }
 
+    /**
+     * Rysuje przyciski, obrazki statków, opisy statków.
+     */
     private void loadContent(){
         stage.clear();
 
@@ -211,7 +244,9 @@ public class StoreScreen implements Screen {
         }
     }
 
-
+    /**
+     *  Renderowanie ekranu Store
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -221,6 +256,9 @@ public class StoreScreen implements Screen {
         stage.draw();
     }
 
+    /**
+     * Zwalnia wszystkie czcionki, elementy UI, dźwięki
+     */
     @Override public void dispose() {
         stage.dispose();
         TextureManager.disposeAll();
@@ -229,6 +267,9 @@ public class StoreScreen implements Screen {
         blockedClickSound.dispose();
     }
 
+    /**
+     * Zezwala na eventy od myszki
+     */
     @Override public void show() {
         Gdx.input.setInputProcessor(stage);
     }

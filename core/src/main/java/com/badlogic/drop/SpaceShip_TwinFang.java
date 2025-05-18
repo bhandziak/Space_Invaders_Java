@@ -6,10 +6,28 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+/**
+ * Klasa reprezentująca statek kosmiczny typu Twin Fang.
+ * <p>
+ * Rozszerza klasę {@link Player} i ustawia statystykę statku:
+ * <ul>
+ *   <li>Obrażenia: 4</li>
+ *   <li>Opóźnienie strzału: 0,4 s</li>
+ *   <li>HP: 10</li>
+ *   <li>Prędkość: 6</li>
+ * </ul>
+ * Dodatkowo działa animacja wystrzału z 2 luf.
+ *
+ * @author Bartłomiej Handziak
+ */
+
+
 public class SpaceShip_TwinFang extends Player{
     protected float leftRightBulletOffset = 0.2f;
     protected boolean isLeftCannonActive = true;
-
+    /**
+     * Tworzy nową instancję statku kosmicznego Twin Fang
+     */
     public SpaceShip_TwinFang(){
         super();
 
@@ -23,6 +41,11 @@ public class SpaceShip_TwinFang extends Player{
         speed = 6f;
     }
 
+    /**
+     * Logika wystrzału z 2 luf na przemian.
+     * @param delta
+     * @param viewport
+     */
     @Override
     public void update(float delta, Viewport viewport) {
         shootTimer += delta;//licznik czasu

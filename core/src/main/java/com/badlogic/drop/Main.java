@@ -7,10 +7,12 @@ import com.badlogic.gdx.Preferences;
 
 /**
  * Główna klasa całej aplikacji.
- * Zarządza przekierowaniami ekranów - ustawia pierwszy ekran na MainMenuScreen.
+ * Zarządza przekierowaniami ekranów - ustawia pierwszy ekran na {@code MainMenuScreen}.
  * Przechowuje zmienne globalne dostępne dla każdego ekranu.
  * Zapisuje i wczytuje save z gry (z pliku).
- * @author Kacper Dziduch, Bartłomiej Handziak
+ * @author Kacper Dziduch
+ * @author Bartłomiej Handziak
+ *
  * @version 1.0
  */
 

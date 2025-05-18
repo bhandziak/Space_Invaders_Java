@@ -14,24 +14,45 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+/**
+ * Klasa zarządzająca nakładką ekranu Game Over.
+ * Nakładka wyświetla:
+ * <p>Napis "Game Over", </p>
+ * <p>Zdobyte punkty, </p>
+ * <p>Przycisk EXIT, który przekierowuje do ekranu {@link MainMenuScreen}</p>
+ *
+ * @author Bartłomiej Handziak
+ */
 public class GameOverScreen {
+    /** Referencja do głównej klasy {@link Main} umożliwia dostęp do zmiennych globalnych*/
     final Main game;
+    /** Renderer do rysowania półprzezroczystego tła */
     private final ShapeRenderer shapeRenderer;
-    private final SpriteBatch batch;
+    /** Scena stage do obsługi elementów UI */
     private final Stage stage;
 
+    /** Napis "GAME OVER" */
     private Label pauseText;
+    /** Napis "score: ..." */
     private Label scoreText;
+    /** Przycisk EXIT, który przekierowuje do ekranu {@link MainMenuScreen}*/
     private TextButton exitButton;
 
+    /** Tekst przycisku EXIT */
     private final String exitButton_Text = "EXIT";
+    /** Dźwięk przegranej gry */
     private Sound gameOverSound;
+    /** Dźwięk kliknięcia w przycisk */
     private Sound clickSound;
 
+    /**
+     * Tworzy nową instancję nakładki Game Over.
+     *
+     * @param game instancja głównej klasy gry
+     */
     GameOverScreen(final Main game){
         this.game = game;
         shapeRenderer = new ShapeRenderer();
-        batch = new SpriteBatch();
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
@@ -79,11 +100,16 @@ public class GameOverScreen {
         stage.addActor(exitButton);
     }
 
+    /**
+     * Zezwala na eventy od myszki
+     */
     public void show(){
         Gdx.input.setInputProcessor(stage);
     }
 
-    // renderowanie nakładki game over
+    /**
+     *  Renderowanie nakładki Game Over
+     */
     public void render() {
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -102,13 +128,18 @@ public class GameOverScreen {
         stage.draw(); // Rysowanie elementów na stage
     }
 
+    /**
+     * Odtwarza dźwięk {@code gameOverSound}
+     */
     public void playGameOverSound(){
         gameOverSound.play();
     }
 
+    /**
+     * Zwalnia wszystkie czcionki, elementy UI, dźwięki
+     */
     public void dispose() {
         shapeRenderer.dispose();
-        batch.dispose();
         stage.dispose();
         TextureManager.disposeAll();
         FontManager.disposeAll();

@@ -13,17 +13,37 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+/**
+ * Ekran menu głównego.
+ * Wyświetla logo gry Space Invaders,
+ * przycisk przekierowujący do ekranu gry {@link MainGame},
+ * przycisk przekierowujący do ekranu sklepu ze statkami kosmicznymi {@link StoreScreen},
+ * rekordowy wynik.
+ *
+ * @author Bartłomiej Handziak
+ */
 public class MainMenuScreen implements Screen {
+    /** Referencja do głównej klasy {@link Main} umożliwia dostęp do zmiennych globalnych*/
     final Main game;
+    /** Scena stage do obsługi elementów UI */
     private Stage stage;
+    /** Przycisk PLAY, który przekierowuje do ekranu {@link MainGame}*/
     private TextButton playButton;
+    /** Przycisk STORE, który przekierowuje do ekranu {@link StoreScreen}*/
     private TextButton storeButton;
 
+    /** Napis przycisku PLAY */
     private final String playButton_Text = "PLAY";
+    /** Napis przycisku STORE */
     private final String storeButton_Text = "STORE";
-
+    /** Dźwięk kliknięcia w przycisk */
     private Sound clickSound;
 
+    /**
+     * Tworzy nową instancję ekranu Main Menu.
+     *
+     * @param game instancja głównej klasy gry
+     */
     public MainMenuScreen(final Main game) {
         this.game = game;
 
@@ -100,6 +120,9 @@ public class MainMenuScreen implements Screen {
         game.score = 0;
     }
 
+    /**
+     *  Renderowanie ekranu Game Over
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -109,6 +132,9 @@ public class MainMenuScreen implements Screen {
         stage.draw();
     }
 
+    /**
+     * Zwalnia wszystkie czcionki, elementy UI, dźwięki
+     */
     @Override public void dispose() {
         stage.dispose();
         TextureManager.disposeAll();
@@ -122,6 +148,9 @@ public class MainMenuScreen implements Screen {
     }
     @Override public void pause() {}
     @Override public void resume() {}
+    /**
+     * Usuwa obsługę eventów z myszki
+     */
     @Override public void hide() {
         Gdx.input.setInputProcessor(null);
     }

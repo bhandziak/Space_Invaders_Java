@@ -10,17 +10,37 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+/**
+ * Główna klasa (ekran) gry Space Invaders.
+ *
+ * <p>
+ * Ekran składa się 4 głównych elementów:
+ * <ul>
+ *     <li>UI: pieniądze, aktualny wynik</li>
+ *     <li>Statek kosmiczny wybrany przez gracza</li>
+ *     <li>Budynki podlegające destrukcji</li>
+ *     <li>Wrogowie</li>
+ * </ul>
+ *
+ * @author Kacper Dziduch
+ * @author Bartłomiej Handziak
+ *
+ * @version 1.0
+ */
 public class MainGame implements Screen {
+    /** Referencja do głównej klasy {@link Main} umożliwia dostęp do zmiennych globalnych*/
     final Main game;
-    // wszystkie pola: player, enemy, viewport, spriteBatch itd...
     Texture backgroundTexture;
 
     SpriteBatch spriteBatch;
     FitViewport viewport;
     //Player
     Player player;
-    Sound hitSound;//dzwiek otrzymania obrazen
-    Sound damageBuildingSound; //dzwiek niszczenia budynku
+    /** Dźwięk otrzymania obraźeń */
+    Sound hitSound;
+    /** Dźwięk niszczenia budynku */
+    Sound damageBuildingSound;
+    /** Dźwięk trafienia budynku przez gracza */
     Sound hitBuildingSound;
 
     //Enemy
@@ -32,24 +52,29 @@ public class MainGame implements Screen {
     Enemy enemyRed;
     //coin
     Array<Coin> coins = new Array<>();
-    //Wave - fala przeciwnikow
+    /** Wave - fala przeciwników */
     EnemyWave enemyWave;
 
-    //tablica na typy przeciwnikow
+    /** Tablica na typy przeciwników */
     Array<Enemy> EnemyTypes = new Array<>();
 
-    //budynki oslaniajace
+    /** Tablica budynków oslaniających */
     Array<ShieldBuilding> bunkers;
     ShieldBuilding bunker;
-    //flaga zatrzymania gry
+    /** Flaga zatrzymania gry */
     private boolean isPaused = false;
+    /** Flaga poprzedniego stanu zatrzymania gry */
     private boolean wasPaused = false;
+    /** Nakładka Pauzy */
     private PauseScreen pauseScreen;
     private InGameUI inGameUI;
+    /** Flaga stanu końca gry */
     private boolean isGameOver = false;
     private boolean isGameUIshowed = false;
 
+    /** Nakładka Game Over */
     private GameOverScreen gameOverScreen;
+    /** Potrzebna do jednorazowego otworzenia dźwięku końca gry */
     private boolean hasPlayedGameOverSound = false;
 
 
@@ -128,6 +153,9 @@ public class MainGame implements Screen {
         viewport.update(width, height, true);
     }
 
+    /**
+     * Pokazuje nakładkę Game Over
+     */
     @Override
     public void show() {
         if(isGameOver){
@@ -135,6 +163,11 @@ public class MainGame implements Screen {
         }
     }
 
+    /**
+     * Renderuje UI, nakładki Game Over, Pauzy.
+     *
+     * @param v Czas ostatniego renderu
+     */
     @Override
     public void render(float v) {
         // Draw your application here.
@@ -160,6 +193,7 @@ public class MainGame implements Screen {
                     isGameUIshowed = true;
                 }
                 wasPaused = false;
+                pauseScreen.hide();
             }else{
                 if (!wasPaused) {
                     pauseScreen.show();
@@ -171,6 +205,9 @@ public class MainGame implements Screen {
         }
     }
 
+    /**
+     * Obsługa przycisku ESC - wywołanie Pauzy
+     */
     public void input(){
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             isPaused = !isPaused;

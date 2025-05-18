@@ -12,25 +12,43 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+/**
+ * Klasa zarządzająca nakładką ekranu Pauzy.
+ * Nakładkę można wyświetlić i tym samych wstrzymać logikę gry za pomocą klawisza ESC.
+ * Nakładka wyświetla:
+ * <p>Napis "GAME IS PAUSED", </p>
+ * <p>Przycisk EXIT, który przekierowuje do ekranu {@link MainMenuScreen}</p>
+ *
+ * @author Bartłomiej Handziak
+ */
 public class PauseScreen {
+    /** Referencja do głównej klasy {@link Main} umożliwia dostęp do zmiennych globalnych*/
     final Main game;
     final MainGame mainGame;
+    /** Renderer do rysowania półprzezroczystego tła */
     private final ShapeRenderer shapeRenderer;
-    private final SpriteBatch batch;
+    /** Scena stage do obsługi elementów UI */
     private final Stage stage;
 
+    /** Napis "GAME IS PAUSED" */
     private Label pauseText;
+    /** Przycisk EXIT, który przekierowuje do ekranu {@link MainMenuScreen}*/
     private TextButton exitButton;
-
+    /** Tekst przycisku EXIT */
     private final String exitButton_Text = "EXIT";
-
+    /** Dźwięk kliknięcia w przycisk */
     private Sound clickSound;
 
+    /**
+     * Tworzy nową instancję nakładki Pauzy.
+     *
+     * @param game instancja głównej klasy gry
+     * @param mainGame instancja klasy menu głównego
+     */
     public PauseScreen(final Main game, final MainGame mainGame){
         this.game = game;
         this.mainGame = mainGame;
         shapeRenderer = new ShapeRenderer();
-        batch = new SpriteBatch();
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
@@ -65,7 +83,9 @@ public class PauseScreen {
         stage.addActor(exitButton);
     }
 
-    // renderowanie nakładki pauzy
+    /**
+     *  Renderowanie nakładki Pauzy
+     */
     public void render() {
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -82,16 +102,27 @@ public class PauseScreen {
         stage.draw(); // Rysowanie elementów na stage
     }
 
+    /**
+     * Zwalnia wszystkie czcionki, elementy UI, dźwięki
+     */
     public void dispose() {
         shapeRenderer.dispose();
-        batch.dispose();
         stage.dispose();
         TextureManager.disposeAll();
         FontManager.disposeAll();
         mainGame.dispose();
         clickSound.dispose();
     }
+    /**
+     * Zezwala na eventy od myszki
+     */
     public void show() {
         Gdx.input.setInputProcessor(stage);
+    }
+    /**
+     * Usuwa obsługę eventów z myszki
+     */
+    public void hide() {
+        Gdx.input.setInputProcessor(null);
     }
 }

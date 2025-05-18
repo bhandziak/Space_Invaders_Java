@@ -22,5 +22,8 @@ tasks.register('generateJavadoc', Javadoc) {
   classpath += configurations.compileClasspath
   destinationDir = file("$buildDir/docs/javadoc")
   failOnError = false // przydatne, jeśli czegoś nie da się przetworzyć
+  options.encoding = 'UTF-8'
+  options.author = true
+  options.version = true
 }
 

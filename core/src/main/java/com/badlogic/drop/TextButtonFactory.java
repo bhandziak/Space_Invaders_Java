@@ -5,19 +5,47 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+/**
+ * Klasa pomocnicza (fabryka) umożliwiająca łatwe tworzenie obiektów {@link TextButton}
+ * z ustaloną pozycją i rozmiarem.
+ *
+ * <p>Przykład użycia:
+ * <pre>{@code
+ * storeButton = TextButtonFactory.create(
+ *     storeButton_Text, UsefulConstans.textSize, storeButtonPosX, storeButtonPosY, UsefulConstans.buttonWidth, UsefulConstans.buttonHeight
+ * );
+ * stage.addActor(storeButton);
+ * }</pre>
+ *
+ * @author Bartłomiej Handziak
+ */
 
 public class TextButtonFactory {
 
-    // defaultColor is WHITE
+    /**
+     * Tworzy przycisk z domyślnym białym kolorem tekstu.
+     */
     public static TextButton create(
         String buttonText, int fontSize, float xPosition, float yPosition,
         float buttonWidth, float buttonHeight
     ) {
         return create(buttonText, fontSize, xPosition, yPosition, buttonWidth, buttonHeight, Color.WHITE);
     }
-
+    /**
+     * Tworzy przycisk z określonym kolorami.
+     *
+     * @param buttonText tekst przycisku
+     * @param fontSize rozmiar czcionki
+     * @param xPosition pozycja X
+     * @param yPosition pozycja Y
+     * @param buttonWidth szerokość
+     * @param buttonHeight wysokość
+     * @param defaultColor kolor tekstu
+     * @return przycisk TextButton
+     */
     public static TextButton create(
         String buttonText, int fontSize, float xPosition, float yPosition,
         float buttonWidth, float buttonHeight, Color defaultColor ) {
