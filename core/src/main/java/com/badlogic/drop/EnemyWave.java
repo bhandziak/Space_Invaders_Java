@@ -9,43 +9,74 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+
+/**
+ * Zarządza falą przeciwników w grze, w tym ich ruchem, strzelaniem, kolizjami oraz generowaniem nowych losowych fal.
+ * Klasa odpowiada za tworzenie przeciwników, poruszanie ich w prawo/lewo i w dół po zetknięciu z krawędzią ekranu,
+ * losowe strzelanie przeciwników, wykrywanie kolizji z graczem i budynkami, wydawanie dźwięków zależnie od rodzaju kolizji,
+ * wyświetlanie pasków życia pod każdym przeciwnikiem oraz zmiany ich kolorów w zależności od pozostałej ilości,
+ * oraz obsługę monet po pokonaniu wrogów (szansa na pojawienie się monety).
+ *
+ * @author Kacper Dziduch
+ */
 public class EnemyWave {
+    /** Szablon przeciwnika, na podstawie którego tworzone są nowe instancje. */
     private Enemy enemyTemplate;
+    /** Lista przeciwników aktualnie na polu gry. */
     private Array<Enemy> enemies;
 
     //odpowiada za ruch przeciwnikow
+    /** Timer odpowiedzialny za opóźnienie ruchu przeciwników. */
     private float moveTimer = 0f;
+    /** Interwał czasu (w sekundach) między kolejnymi ruchami przeciwników. */
     private float moveInterval = 1f; //move delay
+    /** Odległość przesunięcia przeciwników na osi X podczas ruchu. */
     private float moveStep = 0.5f;
+    /** Odległość przesunięcia przeciwników na osi Y podczas ruchu w dół. */
     private float moveDownStep;//ustawiane w 'EnemyWave'
+    /** Flaga określająca kierunek ruchu przeciwników (true = w prawo). */
     private boolean movingRight = true;
     ////////////
 
     //odpowiada za strzelanie przeciwnikow
+    /** Timer odpowiedzialny za opóźnienie strzelania przeciwników. */
     private float shootTimer = 0f;
+    /** Interwał czasu (w sekundach) między kolejnymi seriami strzałów przeciwników. */
     private float shootInterval = 2f; //shooting delay
+    /** Maksymalna liczba przeciwników mogących strzelać w jednej fazie strzału. */
     private int shootingEnemies=5; //max liczba przeciwnikow ktorzy moga strzelic podczas klatki
-    public void setShootInterval(float interval) {
-        this.shootInterval = interval;
-    }
+
     //tekstury dla paska HP wrogow
+    /** Tekstura paska zdrowia w wysokim stanie zdrowia (zielona). */
     Texture barHighTexture = new Texture("progressBar_green.png");
+    /** Tekstura paska zdrowia w średnim stanie zdrowia (pomarańczowa). */
     Texture barMediumTexture = new Texture("progressBar_orange.png");
+    /** Tekstura paska zdrowia w niskim stanie zdrowia (czerwona). */
     Texture barLowTexture = new Texture("progressBar_red.png");
 
     //potrzebne do zmiany Score
+    /** Referencja do głównej klasy {@link Main} umożliwia dostęp do zmiennych globalnych*/
     final Main game;
+    /** Lista pocisków wystrzelonych przez przeciwników. */
     public Array<EnemyBullet> enemyBullets = new Array<>();
 
     //Coin
+    /** Szansa na drop monety po zabiciu przeciwnika (0.0 - 1.0), gdzie 1.0 to 100% szansy. */
     private float dropCoinRate = .3f;//szansa na drop monety
+    /** Lista monet, które pojawiły się na ekranie. */
     Array<Coin> coins = new Array<>();
 
     //Sprawdzenie czy przeciwnicy przemieścili się na sam dół ekranu(zetknięcie z budynkami)
+    /** Flaga sygnalizująca czy przeciwnicy dotarli do dolnej części ekranu (koniec gry). */
     public boolean enemiesReachedBottom=false;
 
     ////////////////////////
 
+    /**
+     * Konstruktor klasy EnemyWave.
+     * @param enemyTemplate szablon przeciwnika
+     * @param game referencja do głównej klasy {@link Main} umożliwia dostęp do zmiennych globalnych
+     */
     public EnemyWave(Enemy enemyTemplate, final Main game) {
         this.game = game;
         this.enemyTemplate = enemyTemplate;
@@ -53,6 +84,15 @@ public class EnemyWave {
         this.moveDownStep = enemyTemplate.sprite.getHeight();//przesuniecie o wysokość przeciwnika
     }
 
+
+    /**
+     * Tworzy nową falę przeciwników i ustawia ich na planszy (służy do manualnego tworzenia fal wg. wzoru,
+     * obecnie gra używa generowanych losowo fal)
+     *
+     * @param viewport widok gry, potrzebny do ustawienia pozycji na ekranie
+     * @param amount liczba przeciwników w fali
+     * @param row numer wiersza w którym pojawi się fala
+     */
     public void spawnWave(Viewport viewport, int amount, int row) {
         float spacing = 0.25f;
         // Szerokość ekranu (do wycentrowania)
@@ -84,6 +124,14 @@ public class EnemyWave {
             enemies.add(newEnemy);
         }
     }
+    /**
+     * Dodaje dodatkowy wiersz przeciwników do istniejącej fali.
+     *
+     * @param viewport widok gry
+     * @param amount liczba przeciwników w wierszu
+     * @param row numer wiersza
+     * @param enemyTemplate typ przeciwnika do dodania
+     */
     public void addRow(Viewport viewport, int amount, int row, Enemy enemyTemplate) {
         float spacing = 0.25f;
 
@@ -119,6 +167,12 @@ public class EnemyWave {
             enemies.add(enemy);
         }
     }
+    /**
+     * Przesuwa przeciwników w poziomie i pionie w zależności od pozycji na ekranie.
+     *
+     * @param delta czas od ostatniej aktualizacji
+     * @param viewport widok gry (do określenia granic ekranu)
+     */
     public void moveEnemies(float delta, Viewport viewport) {
         moveTimer += delta;
         if (moveTimer < moveInterval) return;
@@ -154,6 +208,13 @@ public class EnemyWave {
         }
     }
 
+    /**
+     * Wybiera losowych przeciwników, aby oddali strzał w czasie fazy strzału.
+     * Dla najtrudniejszego typu przeciwnika (czerwonego) jest limit max 3 może strzelić podczas jednej fazy.
+     * Dla pozostałych jest limit max 5 przeciwników może strzelić podczas fazy.
+     *
+     * @param delta czas od ostatniej aktualizacji
+     */
     public void tryShootRandomEnemy(float delta) {
         shootTimer += delta;
 
@@ -207,6 +268,12 @@ public class EnemyWave {
         }
     }
     //usuwanie pociskow przeciwnikow
+    /**
+     * Aktualizuje pozycje pocisków przeciwników oraz usuwa te, które opuściły ekran.
+     *
+     * @param delta czas od ostatniej aktualizacji
+     * @param viewport widok gry
+     */
     public void updateEnemyBullets(float delta, Viewport viewport) {
         for (int i = enemyBullets.size - 1; i >= 0; i--) {
             EnemyBullet bullet = enemyBullets.get(i);
@@ -217,12 +284,24 @@ public class EnemyWave {
             }
         }
     }
+    /**
+     * Rysuje pociski przeciwników na ekranie co klatkę.
+     *
+     * @param batch obiekt do rysowania (SpriteBatch)
+     */
     public void renderEnemyBullets(SpriteBatch batch) {
         for (EnemyBullet bullet : enemyBullets) {
             bullet.render(batch);
         }
     }
     //wykrycie kolizji z graczem
+    /**
+     * Sprawdza kolizję pocisków przeciwników z graczem i odpowiednio odejmuje życie.
+     *
+     * @param playerBounds prostokąt reprezentujący obszar gracza
+     * @param hitSound dźwięk trafienia
+     * @param player instancja gracza
+     */
     public void checkCollisionWithPlayer(Rectangle playerBounds, Sound hitSound, Player player) {
         for (int i = enemyBullets.size - 1; i >= 0; i--) {
             EnemyBullet bullet = enemyBullets.get(i);
@@ -236,6 +315,12 @@ public class EnemyWave {
         }
     }
     //wykrycie kolizji z budynkami
+    /**
+     * Sprawdza kolizję pocisków przeciwników z budynkami osłonowymi i odejmuje hp budynku.
+     *
+     * @param buildings lista budynków osłonowych
+     * @param hitSound dźwięk trafienia
+     */
     public void checkCollisionWithBuildings(Array<ShieldBuilding> buildings, Sound hitSound) {
         for (int i = enemyBullets.size - 1; i >= 0; i--) {
             EnemyBullet bullet = enemyBullets.get(i);
@@ -251,6 +336,12 @@ public class EnemyWave {
         }
     }
     //wykrycie kolizji wrogow z budynkami i graczem (zakonczenie gry przez dojscie przeciwnikow na dol ekranu)
+    /**
+     * Sprawdza czy przeciwnicy zetknęli się z budynkami lub graczem (koniec gry - zmiana ekranu na {@link GameOverScreen}).
+     *
+     * @param buildings lista budynków osłonowych
+     * @param player instancja gracza
+     */
     public void checkEnemiesSpritesCollisionWithBuildingsAndPlayer(Array<ShieldBuilding> buildings,Player player) {
         for (int i =  enemies.size - 1; i >= 0; i--) {
             Enemy enemy = enemies.get(i);
@@ -264,17 +355,33 @@ public class EnemyWave {
         }
     }
 
+    /**
+     * Sprawdza czy przeciwnicy dotarli do dolnej krawędzi ekranu (koniec gry - zmiana ekranu na {@link GameOverScreen}).
+     *
+     * @return true jeśli przeciwnicy dotarli do dołu ekranu (zetknęli się z graczem lub budynkiem)
+     */
     public boolean enemiesReachedBottomScreen(){
         return enemiesReachedBottom; //true - koniec gry
     }
 
     //czyszczenie pociskow ktore zostaly z poprzedniej fali
+    /**
+     * Usuwa wszystkie pozostałe pociski przeciwników z poprzedniej fali, przy zmianie na kolejną.
+     */
     private void clearLeftEnemiesBullets(){
         enemyBullets.clear();
     }
 
     int maxRedEnemiesAmount = 6;//max liczba przeciwnikow typu 'red' w rzedzie
     //metoda do tworzenia nowej fali po skonczeniu poprzedniej
+    /**
+     * Generuje nową falę przeciwników o losowej liczbie wierszy i przeciwników w wierszu.
+     * Jeden wiersz to jeden typ przeciwnika.
+     *
+     * @param enemyTypes lista różnych typów przeciwników
+     * @param viewport widok gry
+     * @param player instancja gracza
+     */
     public void generateNewWave(Array<Enemy>  enemyTypes, FitViewport viewport,Player player){
         int enemyRows = MathUtils.random(1, 5);
         for(int i=0;i<enemyRows;i++){
@@ -293,13 +400,28 @@ public class EnemyWave {
         player.clearLeftPlayerBullets();
     }
     //metoda sprawdzania czy zabito wszystkich przeciwnikow
+    /**
+     * Sprawdza, czy na polu gry pozostał jeszcze jakiś przeciwnik (używane do wykrywania kiedy zmienić falę na nową).
+     *
+     * @return liczba przeciwników na polu gry
+     */
     public int isAnyEnemyLeftOnField(){
         return enemies.size;
     }
+    /**
+     * Zwraca listę przeciwników aktualnie na polu gry.
+     *
+     * @return tablica przeciwników
+     */
     public Array<Enemy> getEnemies() {
         return enemies;
     }
 
+    /**
+     * Rysuje wszystkich przeciwników na ekranie.
+     *
+     * @param batch obiekt do rysowania
+     */
     public void render(SpriteBatch batch) {
         for (Enemy enemy : enemies) {
             enemy.sprite.draw(batch);
@@ -311,6 +433,12 @@ public class EnemyWave {
     private float mediumThreshold = 0.5f;
     private float lowThreshold = 0.2f;
 
+    /**
+     * Rysuje pasek zdrowia przeciwników pod ich sprite'ami.
+     * Kolor paska zależy od aktualnego życia przeciwnika.
+     *
+     * @param batch obiekt do rysowania
+     */
     public void renderEnemyHPBar(SpriteBatch batch){
         for (Enemy enemy : enemies) {
             float hp = enemy.getEnemyHP();
@@ -335,13 +463,34 @@ public class EnemyWave {
         }
     }
     //Funkcja do liczenia szansy na drop monety
+    /**
+     * Sprawdza, czy w danym momencie nastąpiła szansa na drop monety po zabiciu przeciwnika.
+     *
+     * @return true jeśli wylosowano drop monety, false w przeciwnym wypadku
+     */
     public boolean chanceForCoinDrop() {
         return MathUtils.random() < dropCoinRate;
     }
+    /**
+     * Zwraca listę monet aktualnie znajdujących się na ekranie gry.
+     *
+     * @return tablica monet
+     */
     public Array<Coin> getArrayCoins(){
         return coins;
     }
 
+    /**
+     * Aktualizuje stan fali przeciwników:
+     * - usuwa przeciwników, którzy wypadli poza ekran
+     * - sprawdza kolizje pocisków gracza z przeciwnikami i odpowiednio ich uszkadza
+     * - po zabiciu przeciwnika zwiększa wynik gracza (score) oraz generuje monetę z pewnym prawdopodobieństwem
+     * - usuwa trafione pociski gracza
+     *
+     * @param delta czas (w sekundach) od ostatniej aktualizacji
+     * @param viewport widok gry, do sprawdzania pozycji przeciwników
+     * @param bullets lista pocisków wystrzelonych przez gracza, do wykrywania kolizji
+     */
     public void update(float delta, Viewport viewport, Array<PlayerBullet> bullets) {
         for (int i = enemies.size - 1; i >= 0; i--) {
             Enemy enemy = enemies.get(i);
@@ -356,7 +505,6 @@ public class EnemyWave {
                 if (bullet.collides(bounds)) {
                     enemies.get(i).EnemyTakeHit(bullet.getBulletDamage());
                     //("Przeciwnik otrzymal "+bullet.getBulletDamage()+" obrazen, teraz posiada "+enemies.get(i).getEnemyHP()+" HP");//debug note
-                    //TODO tutaj dodac dzwiek otrzymania obrazen przez przeciwnika
                     //Zabicie przeciwnika przez gracza
                     if(enemies.get(i).isEnemyAlive()==0){
                         game.score += enemies.get(i).ScorePoints;//update score

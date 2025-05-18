@@ -77,7 +77,16 @@ public class MainGame implements Screen {
     /** Potrzebna do jednorazowego otworzenia dźwięku końca gry */
     private boolean hasPlayedGameOverSound = false;
 
-
+    /**
+     * Konstruktor klasy MainGame, który inicjalizuje główne komponenty gry.
+     * <p>
+     * Tworzy i ustawia zasoby, takie jak tekstury przeciwników,
+     * ekran pauzy, interfejs użytkownika podczas gry, dźwięki oraz obiekty
+     * reprezentujące gracza, przeciwników i osłony (bunkers).
+     * </p>
+     *
+     * @param game referencja do głównej klasy {@link Main} umożliwia dostęp do zmiennych globalnych
+     */
     public MainGame(Main game) {
         this.game = game;
         pauseScreen = new PauseScreen(game, this);
@@ -213,6 +222,24 @@ public class MainGame implements Screen {
             isPaused = !isPaused;
         }
     }
+    /**
+     * Główna logika gry wykonywana w każdej klatce (frame).
+     * <p>
+     * Metoda aktualizuje stan gry na podstawie czasu delta (czas od ostatniej klatki),
+     * w tym pozycję gracza, ruch i zachowanie fal przeciwników, kolizje między obiektami,
+     * sprawdza warunki zakończenia gry oraz aktualizuje elementy takie jak monety.
+     * </p>
+     * <ul>
+     *     <li>Aktualizuje pozycję i stan gracza.</li>
+     *     <li>Aktualizuje i porusza przeciwników oraz ich pociski.</li>
+     *     <li>Sprawdza kolizje między pociskami przeciwników a graczem oraz budynkami.</li>
+     *     <li>Sprawdza kolizje przeciwników z budynkami i graczem (np. dotarcie do dolnej krawędzi ekranu).</li>
+     *     <li>Generuje nową falę przeciwników, jeśli poprzednia została wyeliminowana.</li>
+     *     <li>Sprawdza warunki przegranej (śmierć gracza lub dotarcie przeciwników do dołu ekranu).</li>
+     *     <li>Aktualizuje animację i stan monet na ekranie.</li>
+     *     <li>Sprawdza kolizje pocisków gracza z budynkami.</li>
+     * </ul>
+     */
     public void logic(){
         float delta = Gdx.graphics.getDeltaTime();//czas gry
         player.update(delta, viewport);//aktualizacja pozycji playera
@@ -248,6 +275,23 @@ public class MainGame implements Screen {
         }
         player.checkCollisionWithBuildings(bunkers,hitBuildingSound);//sprawdzenie kolizji poc. gracza z budynkami
     }
+
+    /**
+     * Metoda odpowiedzialna za rysowanie wszystkich elementów gry na ekranie.
+     * <p>
+     * Czyści ekran, ustawia odpowiednią projekcję kamery, a następnie renderuje
+     * tło, gracza, przeciwników, pociski, paski życia i inne elementy UI oraz
+     * obiekty takie jak monety i budynki osłaniające.
+     * </p>
+     * <ul>
+     *     <li>Czyszczenie ekranu kolorem czarnym.</li>
+     *     <li>Ustawienie widoku i macierzy projekcji kamery.</li>
+     *     <li>Rysowanie tła gry.</li>
+     *     <li>Rysowanie gracza oraz przeciwników wraz z ich pociskami.</li>
+     *     <li>Rysowanie pasków stanu, takich jak pasek cooldownu strzału i pasek życia gracza oraz przeciwników.</li>
+     *     <li>Rysowanie monet oraz budynków osłaniających.</li>
+     * </ul>
+     */
     public void draw(){
         ScreenUtils.clear(Color.BLACK);
         viewport.apply();
@@ -294,6 +338,10 @@ public class MainGame implements Screen {
 
     }
 
+    /**
+     * Zwalnia wszystkie zasoby używane przez grę, takie jak tekstury, fonty i obiekty graficzne,
+     * aby zapobiec wyciekom pamięci.
+     */
     @Override
     public void dispose() {
         // Destroy application's resources here.
