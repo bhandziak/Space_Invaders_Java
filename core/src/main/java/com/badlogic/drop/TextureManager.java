@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * Klasa zarządzająca teksturami.
- * Przechowuje czcionkę jako instancję obiektu {@link Texture}.
+ * Przechowuje teksturę jako instancję obiektu {@link Texture}.
  * Jest po to, aby uniknąć wyciek pamięci.
  * <p>
  *     Po zakończeniu zadziałania aplikacji lub
