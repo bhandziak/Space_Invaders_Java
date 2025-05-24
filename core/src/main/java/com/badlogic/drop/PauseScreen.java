@@ -97,9 +97,8 @@ public class PauseScreen {
 
         Gdx.gl.glDisable(GL20.GL_BLEND);
 
-        // Renderowanie wszystkiego na stage
-        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f)); // Aktualizacja stage
-        stage.draw(); // Rysowanie elementów na stage
+        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        stage.draw();
     }
 
     /**

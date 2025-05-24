@@ -74,6 +74,10 @@ public class GameOverScreen {
         GlyphLayout layout = new GlyphLayout(font, "score: " + game.score);
 
         float scoreTextPosX = (Gdx.graphics.getWidth() - layout.width) / 2f - 50f;
+        if(game.score == 0){
+            scoreTextPosX += 20;
+        }
+
         float scoreTextPosY = Gdx.graphics.getHeight() / 2f + UsefulConstans.textSize - 20f;
         scoreText = TextFieldFactory.create(
             "score: ".concat(String.valueOf(game.score)), UsefulConstans.textSize, scoreTextPosX, scoreTextPosY, Color.WHITE
@@ -123,9 +127,8 @@ public class GameOverScreen {
 
         scoreText.setText("score: ".concat(String.valueOf(game.score)));
 
-        // Renderowanie wszystkiego na stage
-        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f)); // Aktualizacja stage
-        stage.draw(); // Rysowanie elementów na stage
+        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        stage.draw();
     }
 
     /**
