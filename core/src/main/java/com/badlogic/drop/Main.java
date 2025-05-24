@@ -19,12 +19,12 @@ import com.badlogic.gdx.Preferences;
 public class Main extends Game {
     /** Tablica przechowująca stany, czy dany statek został kupiony */
     public boolean[] bought_spaceship ={
-        false, false, false
+        true, false, false
     };
     /** Instancję wybranego statku */
     public Player selectedSpaceShip;
     /** Identyfikator wybranego statku */
-    public int selectedSpaceShipId = 5;
+    public int selectedSpaceShipId = 0;
     /** Ilość pieniędzy gracza. */
     public int money = 0;
     /** Aktualny wynik gracza. */
@@ -83,9 +83,9 @@ public class Main extends Game {
         //wczytanie danych
         recordScore = prefs.getInteger("score", 0); // 0 - domyślna wartość, gdy nie ma save
         money = prefs.getInteger("money", 0);
-        selectedSpaceShipId = prefs.getInteger("selectedSpaceShipId", 5);
+        selectedSpaceShipId = prefs.getInteger("selectedSpaceShipId", 0);
         // bool[] bought_spaceship
-        String saved_bought_spaceship = prefs.getString("boughtSpaceships", "0,0,0"); // domyślnie nic nie kupione
+        String saved_bought_spaceship = prefs.getString("boughtSpaceships", "1,0,0"); // domyślne wartości
         String[] parts = saved_bought_spaceship.split(",");
 
         for (int i = 0; i < parts.length; i++) {
