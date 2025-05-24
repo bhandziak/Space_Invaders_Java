@@ -6,17 +6,40 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
-public class ShieldBuilding {
-    private Sprite spriteBuilding;
-    private int health;
-    private int maxHealth;
-    private boolean destroyed = false;
 
+/**
+ * Reprezentuje budynek obronny (osłonę) w grze.
+ * Obsługuje jego stany (zmiana tekstury przy trafieniach przeciwników), rysowanie, kolizje, resetowanie (przy nowych falach),
+ * oraz renderowanie paska hp budynku.
+ *
+ * @author Kacper Dziduch
+ */
+public class ShieldBuilding {
+
+    /** Sprite budynku */
+    private Sprite spriteBuilding;
+    /** Aktualne zdrowie budynku */
+    private int health;
+    /** Maksymalne zdrowie budynku */
+    private int maxHealth;
+    /** Czy budynek został zniszczony */
+    private boolean destroyed = false;
+    /** Lista budynków — używana np. do resetowania stanu */
     protected Array<ShieldBuilding> buildings;
     //tekstury dla paska HP wrogow
+    /** Tekstura paska HP budynku */
     Texture barFillTexture = new Texture("progressBar_green.png");
+    /** Obrazek budynku w podziale na różne stany zniszczenia */
     private final int buildingImageSize = 603;
 
+
+    /**
+     * Tworzy nowy budynek ochronny na zadanej pozycji, z parametrami:
+     * Liczba trafień: 5
+     *
+     * @param x Pozycja X budynku
+     * @param y Pozycja Y budynku
+     */
     public ShieldBuilding(float x, float y) {
         Texture texture = new Texture("shieldBuilding.png");
         spriteBuilding = new Sprite(texture);
@@ -27,13 +50,21 @@ public class ShieldBuilding {
         maxHealth = health;
         buildings = new Array<>();
     }
-
+    /**
+     * Rysuje budynek, jeśli nie został zniszczony.
+     *
+     * @param batch Obiekt SpriteBatch używany do renderowania
+     */
     public void render(SpriteBatch batch) {
         if (!destroyed) {
             spriteBuilding.draw(batch);
         }
     }
 
+    /**
+     * Aktualizuje wygląd budynku w zależności od jego poziomu zdrowia.
+     * Zmienia region sprite’a na uszkodzony, jeśli HP spada.
+     */
     public void update() {
         if (health <= 0) {
             destroyed = true;
@@ -44,21 +75,43 @@ public class ShieldBuilding {
             spriteBuilding.setRegion(2*buildingImageSize, 0 , buildingImageSize,buildingImageSize);
         }
     }
-
+    /**
+     * Zwraca aktualne HP budynku.
+     *
+     * @return Wartość zdrowia
+     */
     public float getBuildingHP(){
         return health;
     }
+    /**
+     * Zwraca maksymalne HP budynku.
+     *
+     * @return Maksymalna wartość zdrowia
+     */
     public float getBuildingMaxHP(){
         return maxHealth;
     }
+    /**
+     * Zwraca sprite budynku.
+     *
+     * @return Obiekt Sprite
+     */
     public Sprite getBuildingSprite(){
         return spriteBuilding;
     }
 
+    /**
+     * Zwraca prostokąt kolizji budynku.
+     *
+     * @return Prostokąt kolizji
+     */
     public Rectangle getBounds() {
         return spriteBuilding.getBoundingRectangle();
     }
 
+    /**
+     * Zmniejsza zdrowie budynku o 1 i aktualizuje jego wygląd.
+     */
     public void takeHit() {
         if (!destroyed) {
             health--;
@@ -66,14 +119,29 @@ public class ShieldBuilding {
         }
     }
 
+    /**
+     * Zwraca, czy budynek został zniszczony.
+     *
+     * @return true, jeśli budynek nie ma już zdrowia
+     */
     public boolean isDestroyed() {
         return destroyed;
     }
+    /**
+     * Resetuje HP i wygląd pojedynczego budynku na początkowy (używane przy zmianie fali wrogów).
+     *
+     * @param bunker Budynek do zresetowania
+     */
     private void resetHPBuilding(ShieldBuilding bunker){
 
         bunker.health = maxHealth;
         spriteBuilding.setRegion(0,0,buildingImageSize,buildingImageSize);
     }
+    /**
+     * Resetuje stan wszystkich budynków w podanej tablicy (używane przy zmianie fali wrogów).
+     *
+     * @param bunkers Tablica budynków do zresetowania
+     */
     public void resetAllBuildingsState(Array<ShieldBuilding> bunkers){
         for (ShieldBuilding bunker : bunkers){
             bunker.destroyed=false;
@@ -83,6 +151,12 @@ public class ShieldBuilding {
     }
 
     //paski hp budynkow
+    /**
+     * Renderuje paski HP dla wszystkich budynków w podanej tablicy.
+     *
+     * @param batch     SpriteBatch używany do renderowania
+     * @param buildings Tablica budynków
+     */
     public void renderBuildingHPBar(SpriteBatch batch,Array<ShieldBuilding> buildings){
         for (ShieldBuilding building : buildings) {
             float progress = Math.max(0, Math.min(building.getBuildingHP() / building.getBuildingMaxHP(), 1f));
